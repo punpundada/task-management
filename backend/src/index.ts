@@ -7,12 +7,16 @@ import errorHandler from './middleware/errorHandler';
 import { validateSession } from './middleware/authMiddleware';
 
 const app = express();
+
+app.use(express.urlencoded())
 app.use(express.json())
-app.get("/health-check",(req,res)=>{
+
+app.get("/api/health-check",(req,res)=>{
     return res.status(STATUS_CODES.OK).json({
         healthy:true
     })
 })
+
 app.use(validateSession)
 app.use('/api/auth',authRouter)
 app.use('/api/user',userRouter)
