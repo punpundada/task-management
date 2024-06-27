@@ -171,7 +171,9 @@ class AuthController {
     next: NextFunction
   ) {
     try {
-      const validEmail = z.string({required_error:"Email id is required"}).parse(req.body.email);
+      const validEmail = z
+        .string({ required_error: "Email id is required" })
+        .parse(req.body.email);
       const user = await UserService.findUserByEmail(validEmail);
       if (!user) {
         return res.status(STATUS_CODES.BAD_REQUEST).json({
