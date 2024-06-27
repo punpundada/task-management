@@ -3,7 +3,15 @@ CREATE TABLE `email_verification` (
 	`code` text NOT NULL,
 	`user_id` text NOT NULL,
 	`email` text NOT NULL,
-	`expires_at` integer NOT NULL
+	`expires_at` integer NOT NULL,
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
+);
+--> statement-breakpoint
+CREATE TABLE `reset_password` (
+	`token_hash` text NOT NULL,
+	`user_id` text NOT NULL,
+	`expires_at` integer NOT NULL,
+	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
 CREATE TABLE `session` (
@@ -29,10 +37,11 @@ CREATE TABLE `users` (
 	`email` text NOT NULL,
 	`password` text(255) NOT NULL,
 	`is_active` integer DEFAULT true,
-	`created_at` integer DEFAULT '"2024-06-26T19:06:46.183Z"' NOT NULL,
-	`updated_at` integer DEFAULT '"2024-06-26T19:06:46.183Z"' NOT NULL,
+	`created_at` integer DEFAULT '"2024-06-27T14:27:09.038Z"' NOT NULL,
+	`updated_at` integer DEFAULT '"2024-06-27T14:27:09.038Z"' NOT NULL,
 	`email_verified` integer DEFAULT false
 );
 --> statement-breakpoint
 CREATE UNIQUE INDEX `email_verification_user_id_unique` ON `email_verification` (`user_id`);--> statement-breakpoint
+CREATE UNIQUE INDEX `reset_password_token_hash_unique` ON `reset_password` (`token_hash`);--> statement-breakpoint
 CREATE UNIQUE INDEX `users_email_unique` ON `users` (`email`);

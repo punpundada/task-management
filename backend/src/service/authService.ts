@@ -1,6 +1,6 @@
 import { generateIdFromEntropySize } from "lucia";
 import db from "../db";
-import { user } from "../db/schema";
+import { restPasswordTable, user } from "../db/schema";
 import { userInsertSchema, type UserInsert } from "../types/user";
 import { hashParams } from "../utils/lib";
 import lucia from "../utils/lucia";
@@ -8,6 +8,7 @@ import type { LoginUser } from "../types/auth";
 import { emailSchema } from "../types/utils";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
+import { isWithinExpirationDate } from "oslo";
 
 class AuthService {
   static async saveUser(userToSave: UserInsert) {

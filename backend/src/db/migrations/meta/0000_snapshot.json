@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "512969ed-e552-4921-8327-d64d1ce6d0b7",
+  "id": "cc2f2f07-4443-430d-8598-32a4e2f96c77",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "email_verification": {
@@ -52,7 +52,73 @@
           "isUnique": true
         }
       },
-      "foreignKeys": {},
+      "foreignKeys": {
+        "email_verification_user_id_users_id_fk": {
+          "name": "email_verification_user_id_users_id_fk",
+          "tableFrom": "email_verification",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "reset_password": {
+      "name": "reset_password",
+      "columns": {
+        "token_hash": {
+          "name": "token_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "reset_password_token_hash_unique": {
+          "name": "reset_password_token_hash_unique",
+          "columns": [
+            "token_hash"
+          ],
+          "isUnique": true
+        }
+      },
+      "foreignKeys": {
+        "reset_password_user_id_users_id_fk": {
+          "name": "reset_password_user_id_users_id_fk",
+          "tableFrom": "reset_password",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
@@ -212,7 +278,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2024-06-26T19:06:46.183Z\"'"
+          "default": "'\"2024-06-27T14:27:09.038Z\"'"
         },
         "updated_at": {
           "name": "updated_at",
@@ -220,7 +286,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2024-06-26T19:06:46.183Z\"'"
+          "default": "'\"2024-06-27T14:27:09.038Z\"'"
         },
         "email_verified": {
           "name": "email_verified",
