@@ -1,13 +1,11 @@
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import { user } from "../db/schema";
-import { emailSchema } from "./utils";
+import { emailSchema, passwordSchema } from "./utils";
 import { z } from "zod";
 
 export const userInsertSchema = createInsertSchema(user, {
   email: emailSchema,
-  password: z
-    .string({ required_error: "Password is required" })
-    .min(6, { message: "Password must be at least 6 character long" }),
+  password:passwordSchema,
   createdAt: z.date().default(new Date()),
   isActive: z.boolean().default(true),
   name: z.string({ required_error: "Name is required" }),

@@ -15,7 +15,7 @@ interface DatabaseUserAttributes {
   name: string;
   id: string;
   email:string
-  emailVerified:boolean
+  email_verified:boolean
 }
 
 declare module "lucia" {

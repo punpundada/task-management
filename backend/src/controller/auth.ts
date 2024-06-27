@@ -7,9 +7,12 @@ import {
 } from "../types/user";
 import {
   STATUS_CODES,
+  createPasswordResetToken,
+  createTokenHash,
   generateEmailVerificationCode,
   hashParams,
   transporter,
+  verifyVerificationCode,
 } from "../utils/lib";
 import type { Res } from "../types/Res";
 import type { LoginUser } from "../types/auth";
@@ -17,6 +20,11 @@ import lucia from "../utils/lucia";
 import { generateIdFromEntropySize } from "lucia";
 import env from "../utils/env";
 import { emailOtpHTML } from "../views/EmailOTP";
+import UserService from "../service/userService";
+import { z } from "zod";
+import { resetPasswordView } from "../views/restEmailHTML";
+import { passwordSchema } from "../types/utils";
+import TokenService from "../service/tokenService";
 
 class AuthController {
   static async registerUser(
@@ -116,10 +124,121 @@ class AuthController {
   }
 
   static async verifyEmail(
-    req: Request<unknown, unknown, LoginUser>,
+    req: Request<unknown, unknown, { code: string }>,
     res: Response<Res<UserSelect>>,
     next: NextFunction
-  ) {}
+  ) {
+    try {
+      const user = res.locals.user;
+      if (!user) {
+        return res.status(STATUS_CODES.NOT_FOUND).json({
+          isSuccess: false,
+          issues: [],
+          message: "User not found",
+        });
+      }
+      const code = req.body.code;
+      if (typeof code !== "string") {
+        return res.status(STATUS_CODES.BAD_REQUEST).json({
+          isSuccess: false,
+          issues: [],
+          message: "Code should be string type",
+        });
+      }
+      const validCode = await verifyVerificationCode(user, code);
+      if (!validCode) {
+        return new Response(null, {
+          status: 400,
+        });
+      }
+
+      await lucia.invalidateUserSessions(user.id);
+      user.email_verified = true;
+      const updatedUser = UserService.updateUser(user as any);
+      return res.status(STATUS_CODES.OK).json({
+        isSuccess: true,
+        message: "User verified successfully",
+        result: updatedUser as any,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async resetPassword(
+    req: Request<unknown, unknown, { email: string }>,
+    res: Response<Res<boolean>>,
+    next: NextFunction
+  ) {
+    try {
+      const validEmail = z.string({required_error:"Email id is required"}).parse(req.body.email);
+      const user = await UserService.findUserByEmail(validEmail);
+      if (!user) {
+        return res.status(STATUS_CODES.BAD_REQUEST).json({
+          isSuccess: false,
+          issues: [],
+          message: "User not found",
+        });
+      }
+      const verificationToken = await createPasswordResetToken(user.id);
+      const verificationLink =
+        `${env.FRONT_END_BASE_URL}/reset-password/` + verificationToken;
+
+      const emailSend = await transporter.sendMail({
+        from: env.EMAIL_FROM,
+        subject: "Varification OTP",
+        to: user.email,
+        html: resetPasswordView({ redirectURL: verificationLink }),
+      });
+      return res.status(STATUS_CODES.OK).json({
+        isSuccess: true,
+        message: "Password reset Email send successfully",
+        result: true,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async verifyRestPassword(
+    req: Request<{ token: string }, unknown, { password: string }>,
+    res: Response<Res<boolean>>,
+    next: NextFunction
+  ) {
+    try {
+      const validPassword = passwordSchema.parse(req.body.password);
+      const tokenHash = await createTokenHash(req.params.token);
+      const { isValid, savedToken } = await TokenService.validateTokenHash(
+        tokenHash
+      );
+
+      if (!isValid || !savedToken) {
+        return res.status(STATUS_CODES.BAD_REQUEST).json({
+          isSuccess: false,
+          message: "Invalid token",
+          issues: [],
+        });
+      }
+      await TokenService.deleteTokeByUserId(savedToken?.userId);
+      const session = await lucia.createSession(savedToken.userId, {
+        ip_country: "INDIA",
+      });
+
+      const sessionCookie = lucia.createSessionCookie(session.id);
+
+      res.set("Location", "/");
+      res.set("Set-Cookie", sessionCookie.serialize());
+      res.set("Referrer-Policy", "strict-origin");
+
+      return res.status(STATUS_CODES.OK).json({
+        isSuccess: true,
+        message: "Password rest successfullt",
+        result: true,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default AuthController;

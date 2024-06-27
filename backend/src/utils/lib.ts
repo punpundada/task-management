@@ -1,12 +1,13 @@
-import { TimeSpan, createDate } from "oslo";
-import { generateRandomString, alphabet } from "oslo/crypto";
+import { TimeSpan, createDate, isWithinExpirationDate } from "oslo";
+import { generateRandomString, alphabet, sha256 } from "oslo/crypto";
 import db from "../db";
-import { emaiVerification } from "../db/schema";
+import { emaiVerification, restPasswordTable } from "../db/schema";
 import { eq } from "drizzle-orm";
 import nodemailer, { type TransportOptions } from "nodemailer";
 import env from "./env";
-
-
+import { generateIdFromEntropySize, type User } from "lucia";
+import e from "express";
+import { encodeHex } from "oslo/encoding";
 
 export const STATUS_CODES = {
   OK: 200,
@@ -40,6 +41,30 @@ export async function generateEmailVerificationCode(
   return code;
 }
 
+export async function verifyVerificationCode(
+  user: User,
+  code: string
+): Promise<boolean> {
+  return await db.transaction(async (tx) => {
+    const databaseCode = await tx.query.emaiVerification.findFirst({
+      where: eq(emaiVerification.userId, user.id),
+    });
+    if (!databaseCode || databaseCode.code !== code) {
+      return false;
+    }
+    const dd = await tx
+      .delete(emaiVerification)
+      .where(eq(emaiVerification.id, databaseCode.id))
+      .returning();
+    if (!isWithinExpirationDate(databaseCode.expiresAt)) {
+      return false;
+    }
+    if (databaseCode.email !== user.email) {
+      return false;
+    }
+    return true;
+  });
+}
 
 const transporterObj = {
   host: env.SMTP_HOST!,
@@ -49,7 +74,27 @@ const transporterObj = {
     user: env.SMTP_USER!, // generated brevo user
     pass: env.SMTP_PASS!, // generated brevo password
   },
-}
+};
 
 export const transporter = nodemailer.createTransport(transporterObj as any);
 
+export async function createTokenHash(tokenId: string) {
+  return encodeHex(await sha256(new TextEncoder().encode(tokenId)));
+}
+
+export async function createPasswordResetToken(userId: string): Promise<string> {
+  await db
+    .delete(restPasswordTable)
+    .where(eq(restPasswordTable.userId, userId));
+
+  const tokenId = generateIdFromEntropySize(25); // 40 character
+  const tokenHash = await createTokenHash(tokenId);
+
+  await db.insert(restPasswordTable).values({
+    token_hash: tokenHash,
+    userId: userId,
+    expiresAt: createDate(new TimeSpan(1, "h")),
+  });
+
+  return tokenId;
+}
