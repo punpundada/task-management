@@ -37,7 +37,7 @@ class EmailVerificationService {
       if (!databaseCode || databaseCode.code !== code) {
         return false;
       }
-      const dd = await tx
+       await tx
         .delete(emaiVerification)
         .where(eq(emaiVerification.id, databaseCode.id))
         .returning();

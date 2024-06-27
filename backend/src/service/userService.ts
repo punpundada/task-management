@@ -5,7 +5,6 @@ import type { UserSelect } from "../types/user";
 
 class UserService {
   static async updateUser(userToUpdate: UserSelect) {
-    console.log('userToUpdate',userToUpdate)
     const updatedUser = await db.update(user).set(userToUpdate)
     .where(eq(user.id,userToUpdate.id))
     .returning({

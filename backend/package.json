@@ -26,6 +26,7 @@
     "drizzle-orm": "^0.31.2",
     "drizzle-zod": "^0.5.1",
     "express": "^4.19.2",
+    "express-rate-limit": "^7.3.1",
     "lucia": "^3.2.0",
     "nodemailer": "^6.9.14",
     "oslo": "^1.2.1"
