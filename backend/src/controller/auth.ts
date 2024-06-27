@@ -148,9 +148,11 @@ class AuthController {
         code
       );
       if (!validCode) {
-        return new Response(null, {
-          status: 400,
-        });
+        return res.status(STATUS_CODES.BAD_REQUEST).json({
+          isSuccess:false,
+          issues:[],
+          message:"Verification failed"
+        })
       }
 
       await lucia.invalidateUserSessions(user.id);
