@@ -7,12 +7,10 @@ import {
 } from "../types/user";
 import {
   STATUS_CODES,
-  createPasswordResetToken,
   createTokenHash,
-  generateEmailVerificationCode,
   hashParams,
+  hashPassword,
   transporter,
-  verifyVerificationCode,
 } from "../utils/lib";
 import type { Res } from "../types/Res";
 import type { LoginUser } from "../types/auth";
@@ -25,6 +23,8 @@ import { z } from "zod";
 import { resetPasswordView } from "../views/restEmailHTML";
 import { passwordSchema } from "../types/utils";
 import TokenService from "../service/tokenService";
+import EmailVerificationService from "../service/emailVerificationService";
+import { Await } from "react-router-dom";
 
 class AuthController {
   static async registerUser(
@@ -36,10 +36,7 @@ class AuthController {
       const userId = generateIdFromEntropySize(10);
       req.body.id = userId;
 
-      const passwordHash = await Bun.password.hash(
-        req.body.password,
-        hashParams
-      );
+      const passwordHash = await hashPassword(req.body.password);
 
       req.body.password = passwordHash;
 
@@ -51,10 +48,11 @@ class AuthController {
         validUser
       );
 
-      const verificationCode = await generateEmailVerificationCode(
-        savedUser[0].id,
-        savedUser[0].email
-      );
+      const verificationCode =
+        await EmailVerificationService.generateEmailVerificationCode(
+          savedUser[0].id,
+          savedUser[0].email
+        );
 
       const emailSend = await transporter.sendMail({
         from: env.EMAIL_FROM,
@@ -145,7 +143,10 @@ class AuthController {
           message: "Code should be string type",
         });
       }
-      const validCode = await verifyVerificationCode(user, code);
+      const validCode = await EmailVerificationService.verifyVerificationCode(
+        user,
+        code
+      );
       if (!validCode) {
         return new Response(null, {
           status: 400,
@@ -182,7 +183,9 @@ class AuthController {
           message: "User not found",
         });
       }
-      const verificationToken = await createPasswordResetToken(user.id);
+      const verificationToken = await TokenService.createPasswordResetToken(
+        user.id
+      );
       const verificationLink =
         `${env.FRONT_END_BASE_URL}/reset-password/` + verificationToken;
 
@@ -221,7 +224,14 @@ class AuthController {
           issues: [],
         });
       }
-      await TokenService.deleteTokeByUserId(savedToken?.userId);
+      const [_, user, hashedPassword]: [any, any, string] = await Promise.all([
+        TokenService.deleteTokeByUserId(savedToken?.userId),
+        UserService.findUserByUserId(savedToken.userId),
+        hashPassword(req.body.password),
+      ]);
+
+      user.password = hashedPassword;
+      await UserService.updateUser(user as any);
       const session = await lucia.createSession(savedToken.userId, {
         ip_country: "INDIA",
       });
@@ -241,6 +251,7 @@ class AuthController {
       next(error);
     }
   }
+
 }
 
 export default AuthController;

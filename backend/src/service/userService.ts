@@ -4,9 +4,11 @@ import { user } from "../db/schema";
 import type { UserSelect } from "../types/user";
 
 class UserService {
-  static async updateUser(userToUpdate: Partial<UserSelect>) {
+  static async updateUser(userToUpdate: UserSelect) {
     console.log('userToUpdate',userToUpdate)
-    const updatedUser = await db.update(user).set(userToUpdate).returning({
+    const updatedUser = await db.update(user).set(userToUpdate)
+    .where(eq(user.id,userToUpdate.id))
+    .returning({
       id: user.id,
       name: user.name,
       email: user.email,
@@ -26,6 +28,15 @@ class UserService {
       }
     })
     return getUser;
+  }
+
+  static async findUserByUserId(userId:string){
+   return await db.query.user.findFirst({
+      where:(eq(user.id,userId)),
+      columns:{
+        password:false
+      }
+    })
   }
 }
 
