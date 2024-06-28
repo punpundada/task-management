@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "cc2f2f07-4443-430d-8598-32a4e2f96c77",
+  "id": "3101f74f-8d9f-4891-b313-2e80a4bafedd",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "email_verification": {
@@ -171,10 +171,10 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "integer",
           "primaryKey": true,
           "notNull": true,
-          "autoincrement": false
+          "autoincrement": true
         },
         "title": {
           "name": "title",
@@ -278,7 +278,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2024-06-27T14:27:09.038Z\"'"
+          "default": "'\"2024-06-28T16:51:22.635Z\"'"
         },
         "updated_at": {
           "name": "updated_at",
@@ -286,7 +286,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2024-06-27T14:27:09.038Z\"'"
+          "default": "'\"2024-06-28T16:51:22.635Z\"'"
         },
         "email_verified": {
           "name": "email_verified",
