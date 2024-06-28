@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { STATUS_CODES } from "../utils/lib";
+import { CustomError, STATUS_CODES } from "../utils/lib";
 import { ZodError } from "zod";
 import type { Res } from "../types/Res";
 import { LibsqlError } from "@libsql/client";
@@ -15,6 +15,15 @@ export default function (
     stack: error.stack,
     name: error.name
   });
+  
+  if (error instanceof CustomError){
+    return res.status(error.code).json({
+      isSuccess:false,
+      issues:[],
+      message:error.message
+    })
+  }
+
   if(error instanceof LibsqlError){
     return res.status(STATUS_CODES.BAD_REQUEST).json({
       isSuccess:false,

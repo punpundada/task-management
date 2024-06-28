@@ -3,7 +3,7 @@ import user from "./user";
 import { relations } from "drizzle-orm";
 
 const task = sqliteTable("tasks",{
-    id:text("id").primaryKey(),
+    id:integer("id").primaryKey({autoIncrement:true}),
     title:text("title",{length:300}).notNull(),
     userId:text("user_id").notNull().references(()=>user.id),
     status:text("status",{enum:['BACKLOG',"TODO","INPROGRESS","DONE","CANCLED"]}).default("TODO"),

@@ -2,6 +2,7 @@ import { sha256 } from "oslo/crypto";
 import nodemailer from "nodemailer";
 import env from "./env";
 import { encodeHex } from "oslo/encoding";
+import type { User } from "lucia";
 
 export const STATUS_CODES = {
   OK: 200,
@@ -36,3 +37,18 @@ export async function createTokenHash(tokenId: string) {
 export const hashPassword = async (password: string) => {
   return await Bun.password.hash(password, hashParams);
 };
+
+export class CustomError extends Error{
+  public code:number
+  constructor(message:string,code:number){
+    super(message)
+    this.code=code
+  }
+}
+
+export const getUserOrError =(user:User|null)=>{
+  if(!user){
+    throw new CustomError("User not found",STATUS_CODES.NOT_FOUND)
+  }
+  return user;
+}
