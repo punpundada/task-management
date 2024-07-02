@@ -2,7 +2,8 @@ import { sha256 } from "oslo/crypto";
 import nodemailer from "nodemailer";
 import env from "./env";
 import { encodeHex } from "oslo/encoding";
-import type { User } from "lucia";
+import type { Session, User } from "lucia";
+import { session } from "../db/schema";
 
 export const STATUS_CODES = {
   OK: 200,
@@ -10,6 +11,7 @@ export const STATUS_CODES = {
   CREATED: 201,
   SERVER_ERROR: 500,
   BAD_REQUEST: 400,
+  UNAUTHORIZED:401, 
 } as const;
 
 export const hashParams = {
@@ -46,9 +48,12 @@ export class CustomError extends Error{
   }
 }
 
-export const getUserOrError =(user:User|null)=>{
-  if(!user){
-    throw new CustomError("User not found",STATUS_CODES.NOT_FOUND)
+export const getUserOrError =(locals:{
+  user: User | null;
+  session: Session | null;
+})=>{
+  if(!locals.user || !locals.session){
+    throw new CustomError("Unauthorized",STATUS_CODES.UNAUTHORIZED)
   }
-  return user;
+  return {user:locals.user,session:locals.session};
 }

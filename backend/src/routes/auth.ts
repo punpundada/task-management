@@ -16,6 +16,9 @@ authRouter.post("/login",AuthController.login)
 authRouter.post("/email-verification",AuthController.verifyEmail)
 authRouter.post("/reset-password",limiter,AuthController.resetPassword)
 authRouter.post("/reset-password/:token",AuthController.verifyRestPassword)
+authRouter.get("/logout",AuthController.logout)
+authRouter.get("/logout/all",AuthController.logoutAllDevices)
+authRouter.get("/resend-email/:email",limiter,AuthController.resendOtp)
 
 
 export default authRouter
