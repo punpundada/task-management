@@ -3,12 +3,16 @@ import type { Session } from "lucia";
 import type { User } from "lucia";
 import { verifyRequestOrigin } from "lucia";
 import lucia from "../utils/lucia";
+import env from "../utils/env";
 
 export const csrfProtection = (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
+  if(env.NODE_ENV === 'development'){
+    return next();
+  }
   if (req.method === "GET") {
     return next();
   }

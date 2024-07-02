@@ -4,7 +4,7 @@ import { STATUS_CODES } from './utils/lib';
 import authRouter from './routes/auth';
 import { userRouter } from './routes/user';
 import errorHandler from './middleware/errorHandler';
-import { validateSession } from './middleware/authMiddleware';
+import { csrfProtection, validateSession } from './middleware/authMiddleware';
 import taskRouter from './routes/task';
 
 const app = express();
@@ -18,6 +18,7 @@ app.get("/api/health-check",(req,res)=>{
     })
 })
 
+app.use(csrfProtection)
 app.use(validateSession)
 app.use('/api/auth',authRouter)
 app.use('/api/user',userRouter)
