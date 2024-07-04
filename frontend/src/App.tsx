@@ -5,6 +5,8 @@ import TaskList from "./pages/task/TaskList";
 import NotFound from "./pages/common/NotFound";
 import TaskForm from "./pages/task/TaskForm";
 import Settings from "./pages/Settings";
+import Login from "./pages/auth/Login";
+import { Toaster } from "./components/ui/sonner";
 
 const router = createBrowserRouter([
   {
@@ -30,6 +32,10 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: "login",
+    element: <Login />,
+  },
+  {
     path: "*",
     element: <NotFound />,
   },
@@ -38,6 +44,7 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
+      <Toaster />
       <RouterProvider router={router} />
     </>
   );
