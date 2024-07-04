@@ -13,7 +13,7 @@ class TaskController {
   ) {
     try {
 
-      req.body.userId = getUserOrError(res.locals.user).id;
+      req.body.userId = getUserOrError(res.locals).user.id;
 
       const task = await TasksService.saveTasks(req.body);
       return res.status(STATUS_CODES.OK).json({
@@ -32,7 +32,7 @@ class TaskController {
     next: NextFunction
   ) {
     try {
-      const userId = getUserOrError(res.locals.user).id;
+      const userId = getUserOrError(res.locals).user.id;
 
       const taskList = await TasksService.getTasks(userId);
       return res.status(STATUS_CODES.OK).json({
@@ -51,7 +51,7 @@ class TaskController {
     next: NextFunction
   ) {
     try {
-      getUserOrError(res.locals.user);
+      getUserOrError(res.locals);
       const validId = z.number().parse(+req.params.id);
       if (req.body.id !== validId) {
         return res.status(STATUS_CODES.BAD_REQUEST).json({
@@ -80,7 +80,7 @@ class TaskController {
     next: NextFunction
   ){
     try {
-      getUserOrError(res.locals.user);
+      getUserOrError(res.locals);
       const isDeleted = await TasksService.deleteById(req.params.id);
       if(isDeleted){
         return res.status(STATUS_CODES.OK).json({

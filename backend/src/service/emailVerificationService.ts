@@ -37,7 +37,7 @@ class EmailVerificationService {
       if (!databaseCode || databaseCode.code !== code) {
         return false;
       }
-       await tx
+      await tx
         .delete(emaiVerification)
         .where(eq(emaiVerification.id, databaseCode.id))
         .returning();
@@ -51,7 +51,11 @@ class EmailVerificationService {
     });
   }
 
-
+  static async deleteVerificationByUserId(userId: string) {
+    return await db
+      .delete(emaiVerification)
+      .where(eq(emaiVerification.userId, userId));
+  }
 }
 
 export default EmailVerificationService;

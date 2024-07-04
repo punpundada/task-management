@@ -8,6 +8,7 @@ import {
 import {
   STATUS_CODES,
   createTokenHash,
+  getUserOrError,
   hashParams,
   hashPassword,
   transporter,
@@ -149,10 +150,10 @@ class AuthController {
       );
       if (!validCode) {
         return res.status(STATUS_CODES.BAD_REQUEST).json({
-          isSuccess:false,
-          issues:[],
-          message:"Verification failed"
-        })
+          isSuccess: false,
+          issues: [],
+          message: "Verification failed",
+        });
       }
 
       await lucia.invalidateUserSessions(user.id);
@@ -254,6 +255,103 @@ class AuthController {
     }
   }
 
+  static async logout(
+    req: Request,
+    res: Response<Res<boolean>>,
+    next: NextFunction
+  ) {
+    res.locals;
+    try {
+      const { session } = getUserOrError(res.locals);
+      await lucia.invalidateSession(session.id);
+      return res.status(STATUS_CODES.OK).json({
+        isSuccess: true,
+        message: "User logged out successfully",
+        result: true,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async logoutAllDevices(
+    req: Request,
+    res: Response<Res<boolean>>,
+    next: NextFunction
+  ) {
+    try {
+      const { user } = getUserOrError(res.locals);
+      await lucia.invalidateUserSessions(user.id);
+      return res.status(STATUS_CODES.OK).json({
+        isSuccess: true,
+        message: "Logged out from all devices",
+        result: true,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async resendOtp(
+    req: Request<{ email: string }>,
+    res: Response<Res<boolean>>,
+    next: NextFunction
+  ) {
+    try {
+      const validEmail = z.string().parse(req.params.email);
+      const user = await UserService.findUserByEmail(validEmail);
+      if (!user) {
+        return res.status(STATUS_CODES.NOT_FOUND).json({
+          isSuccess: false,
+          issues: [],
+          message: "User not found",
+        });
+      }
+      if (user.email_verified) {
+        return res.status(STATUS_CODES.BAD_REQUEST).json({
+          isSuccess: false,
+          issues: [],
+          message: "User already verified",
+        });
+      }
+
+      const [result, verificationCode] = await Promise.all([
+        EmailVerificationService.deleteVerificationByUserId(user.id),
+        EmailVerificationService.generateEmailVerificationCode(
+          user.id,
+          user.email
+        ),
+      ]);
+
+      const emailSend = await transporter.sendMail({
+        from: env.EMAIL_FROM,
+        subject: "Varification OTP",
+        to: user.email,
+        html: emailOtpHTML({
+          name: "Tasks-app",
+          otp: verificationCode,
+          validFor: "15 mins",
+        }),
+      });
+
+      if (!emailSend.accepted) {
+        return res.status(STATUS_CODES.SERVER_ERROR).json({
+          isSuccess: false,
+          issues: [],
+          message: "Email was not send",
+        });
+      }
+
+      return res.status(STATUS_CODES.OK).json({
+        isSuccess: true,
+        message: "Email send successfully",
+        result: true,
+      });
+      
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default AuthController;
