@@ -11,17 +11,18 @@ import type { CorsOptions } from "cors";
 
 const app = express();
 
-const allowedOrions =
-  env.NODE_ENV === "development"
-    ? ["localhost:5173", "localhost:5174", "localhost:5175", "localhost:9009"]
-    : [];
+const allowedOrions = ["localhost:5173", "localhost:5174", "localhost:5175", "localhost:9009"]
+    
 
 const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
-    console.log("origin",origin)
-    if (origin && allowedOrions.indexOf(origin)) {
+    console.log('origin',origin)
+    if (!origin) {
+      callback(null, false);
+    }else if(origin && allowedOrions.indexOf(origin!) !== -1){
       callback(null, true);
-    } else {
+    }
+     else {
       callback(new CustomError("Not allowed by CORS", STATUS_CODES.FORBIDDEN));
     }
   },
