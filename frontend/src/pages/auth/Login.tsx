@@ -13,10 +13,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 import InputControl from "@/components/formcontrol/Input";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import AuthService from "@/authService";
 import { toast } from "sonner";
+import { useAuthContext } from "@/context/AuthContext";
+
 const Login = () => {
+  const navigate = useNavigate();
+  const {setData,isAuthenticated} =useAuthContext();
   const form = useForm<LoginType>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -28,14 +32,22 @@ const Login = () => {
   });
   const onSubmit = async (data: LoginType) => {
     const result = await AuthService.login(data);
-    toast(result?.message);
+    toast(result?.message, { dismissible: true });
+    navigate("/");
+    if(result?.isSuccess && result?.result){
+      setData({isAuthenticated:true,user:result.result})
+      window.localStorage.setItem("user",JSON.stringify(result.result))
+    }
   };
+  if(isAuthenticated){
+    return <Navigate to={'/'} />
+  }
   return (
     <div className="flex h-screen bg-background">
       <div className=" p-10 hidden w-1/2 h-full md:flex justify-center">
         <img src={signupBro} alt="signup-bro" className="object-contain" />
       </div>
-      <div className="w-1/2 p-10 flex items-center justify-center">
+      <div className=" w-full md:w-1/2 p-1 md:p-2 lg:p-10 flex items-center justify-center">
         <Card className="w-[95%] md:w-[75%]">
           <CardHeader>
             <CardTitle>Login bro!!</CardTitle>
@@ -54,6 +66,12 @@ const Login = () => {
                   label="Password"
                   name="password"
                   placeholder="Password"
+                  type="password"
+                  description={
+                    <Link to={"../forgot-password"} className="hover:underline">
+                      Forgot Password?
+                    </Link>
+                  }
                 />
                 <Button type="submit" className="">
                   Login
@@ -61,9 +79,10 @@ const Login = () => {
               </form>
             </Form>
           </CardContent>
-          <CardFooter>
-            <Link to={"forget-password"} className="hover:underline">
-              Forgot Password?
+          <CardFooter className="text-sm">
+            <span className="mr-2">Don't have an account?</span>
+            <Link to={"../signup"} className="hover:underline">
+              Signup
             </Link>
           </CardFooter>
         </Card>

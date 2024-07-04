@@ -7,11 +7,20 @@ import TaskForm from "./pages/task/TaskForm";
 import Settings from "./pages/Settings";
 import Login from "./pages/auth/Login";
 import { Toaster } from "./components/ui/sonner";
+import Signup from "./pages/auth/Signup";
+import React from "react";
+import { useAuthContext } from "./context/AuthContext";
+import { User } from "./types/user";
+import ProtectedRoute from "./pages/common/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Layout />,
+    element: (
+      <ProtectedRoute>
+        <Layout />
+      </ProtectedRoute>
+    ),
     children: [
       {
         index: true,
@@ -32,8 +41,17 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "login",
-    element: <Login />,
+    path: "auth",
+    children: [
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "signup",
+        element: <Signup />,
+      },
+    ],
   },
   {
     path: "*",
@@ -42,6 +60,19 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
+  const { setData } = useAuthContext();
+
+  React.useEffect(() => {
+    if (!window?.localStorage) return;
+    const user: User = JSON.parse(window.localStorage.getItem("user") ?? "{}");
+    if (!user?.id) {
+      setData({ isAuthenticated: false, user: undefined });
+      window.localStorage.removeItem("user");
+    } else {
+      setData({ isAuthenticated: true, user: user });
+    }
+  }, [setData]);
+
   return (
     <>
       <Toaster />

@@ -15,9 +15,9 @@ export interface InputControl<T extends FieldValues>
   name: Path<T>;
   label: string;
   placeholder?: string;
-  description?: string;
+  description?: string | React.ReactNode;
   disabled?: boolean;
-  type?: "text" | "number" | "file" | "number" | "email";
+  type?: "text" | "number" | "file" | "number" | "email" | "password";
   defaultValue?: PathValue<T, Path<T>>;
 }
 
