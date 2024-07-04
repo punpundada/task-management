@@ -13,16 +13,13 @@ const app = express();
 
 const allowedOrions =
   env.NODE_ENV === "development"
-    ? [
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://localhost:5175",
-      ]
+    ? ["localhost:5173", "localhost:5174", "localhost:5175", "localhost:9009"]
     : [];
 
 const corsOptions: CorsOptions = {
   origin: (origin, callback) => {
-    if (!origin || allowedOrions.includes(origin)) {
+    console.log("origin",origin)
+    if (origin && allowedOrions.indexOf(origin)) {
       callback(null, true);
     } else {
       callback(new CustomError("Not allowed by CORS", STATUS_CODES.FORBIDDEN));
