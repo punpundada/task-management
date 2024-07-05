@@ -6,7 +6,12 @@ import rateLimit from "express-rate-limit";
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 5 minutes
     max: 5, // limit each IP to 5 requests per windowMs
-    message: 'Too many requests from same ip, please try again later.',
+    message: {
+      status: 429, // optional, of course
+      limiter: true,
+      type: "error",
+      message: 'maximum_accounts'
+    },
   });
 
 const authRouter = Router();
