@@ -6,12 +6,12 @@ import NotFound from "./pages/common/NotFound";
 import TaskForm from "./pages/task/TaskForm";
 import Settings from "./pages/Settings";
 import Login from "./pages/auth/Login";
-import { Toaster } from "./components/ui/sonner";
 import Signup from "./pages/auth/Signup";
 import React from "react";
 import { useAuthContext } from "./context/AuthContext";
 import { User } from "./types/user";
 import ProtectedRoute from "./pages/common/ProtectedRoute";
+import { Toaster } from "./components/ui/toaster";
 
 const router = createBrowserRouter([
   {

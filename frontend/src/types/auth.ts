@@ -6,7 +6,6 @@ export const loginSchema = z.object({
     .email({ message: "Invalid email format" }),
   password: z
     .string({ required_error: "Please enter password" })
-    .min(6, { message: "Password must be 6 or more digits" }),
 });
 
 export type LoginType = z.infer<typeof loginSchema>;

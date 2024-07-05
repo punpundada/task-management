@@ -14,13 +14,14 @@ import { Form } from "@/components/ui/form";
 import InputControl from "@/components/formcontrol/Input";
 import { Button } from "@/components/ui/button";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-import AuthService from "@/authService";
-import { toast } from "sonner";
 import { useAuthContext } from "@/context/AuthContext";
+import AuthService from "@/services/authService";
+import { useToast } from "@/components/ui/use-toast";
 
 const Login = () => {
   const navigate = useNavigate();
-  const {setData,isAuthenticated} =useAuthContext();
+  const {toast}=useToast()
+  const { setData, isAuthenticated } = useAuthContext();
   const form = useForm<LoginType>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -32,15 +33,22 @@ const Login = () => {
   });
   const onSubmit = async (data: LoginType) => {
     const result = await AuthService.login(data);
-    toast(result?.message, { dismissible: true });
-    navigate("/");
-    if(result?.isSuccess && result?.result){
-      setData({isAuthenticated:true,user:result.result})
-      window.localStorage.setItem("user",JSON.stringify(result.result))
+    if (result?.isSuccess) {
+      toast({ title: "Success", description: result.message, variant: "default" });
+      navigate("/");
+      setData({ isAuthenticated: true, user: result.result });
+      window.localStorage.setItem("user", JSON.stringify(result.result));
+    } else {
+      toast({
+        title: "Error while logging in",
+        variant: "destructive",
+        description: "Either email or password is wrong",
+        duration: 3000,
+      });
     }
   };
-  if(isAuthenticated){
-    return <Navigate to={'/'} />
+  if (isAuthenticated) {
+    return <Navigate to={"/"} />;
   }
   return (
     <div className="flex h-screen bg-background">
@@ -79,8 +87,8 @@ const Login = () => {
               </form>
             </Form>
           </CardContent>
-          <CardFooter className="text-sm">
-            <span className="mr-2">Don't have an account?</span>
+          <CardFooter className="flex justify-end gap-2">
+            <span className="">Don't have an account?</span>
             <Link to={"../signup"} className="hover:underline">
               Signup
             </Link>
