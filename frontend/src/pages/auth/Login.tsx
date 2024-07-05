@@ -69,7 +69,7 @@ const Login = () => {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="flex flex-col space-y-2 gap-4"
               >
-                <InputControl label="Email" name="email" placeholder="Email" />
+                <InputControl label="Email" name="email" placeholder="Email" disabled={form.formState.isSubmitting} />
                 <InputControl
                   label="Password"
                   name="password"
@@ -80,8 +80,9 @@ const Login = () => {
                       Forgot Password?
                     </Link>
                   }
+                  disabled={form.formState.isSubmitting}
                 />
-                <Button type="submit" className="">
+                <Button type="submit" className="" disabled={form.formState.isSubmitting}>
                   Login
                 </Button>
               </form>

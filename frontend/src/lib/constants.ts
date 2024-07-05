@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import env from "./env";
 
 export const axiosInstance = axios.create({
@@ -14,6 +14,17 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error) => {
+    console.error(error)
     return Promise.reject(error);
   }
 );
+
+axiosInstance.interceptors.response.use((res)=>{
+  return res
+},(error)=>{
+  if(error instanceof AxiosError && (Number(error.response?.status) === 401)){
+    localStorage.removeItem('user')
+  }
+  return Promise.reject(error)
+}
+)
