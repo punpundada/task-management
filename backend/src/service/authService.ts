@@ -15,6 +15,7 @@ class AuthService {
       isActive: user.isActive,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
+      email_verified:user.email_verified
     });
 
     const session = await lucia.createSession(savedUser[0].id, {

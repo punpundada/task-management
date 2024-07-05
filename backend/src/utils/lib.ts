@@ -11,7 +11,8 @@ export const STATUS_CODES = {
   CREATED: 201,
   SERVER_ERROR: 500,
   BAD_REQUEST: 400,
-  UNAUTHORIZED:401, 
+  UNAUTHORIZED:401,
+  FORBIDDEN:403,
 } as const;
 
 export const hashParams = {
