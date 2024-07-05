@@ -1,6 +1,5 @@
-import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
-import { CircleUserRound, Power, Settings, Settings2 } from "lucide-react";
+import { CircleUserRound, Mail, Power, Settings, Settings2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,19 +10,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuthContext } from "@/context/AuthContext";
 import AuthService from "@/services/authService";
-import { useState } from "react";
 
-type Props = {};
 
 const SettingMenu = () => {
-  const { isAuthenticated, setData } = useAuthContext();
+  const { isAuthenticated, setData,email_verified } = useAuthContext();
 
   const handleLogout = async () => {
     const data = await AuthService.logout();
     if (data.isSuccess) {
       window.localStorage.removeItem("user");
       setData({ isAuthenticated: false, user: undefined });
-    }
+    } 
   };
   return (
     <DropdownMenu>
@@ -38,6 +35,9 @@ const SettingMenu = () => {
         <DropdownMenuItem className="">
           <CircleUserRound className="mr-2" strokeWidth={0.85} /> Profile
         </DropdownMenuItem>
+       {!email_verified && <DropdownMenuItem className="">
+          <Mail className="mr-2" strokeWidth={0.85} /> Verify Email
+        </DropdownMenuItem>}
         <DropdownMenuItem className="">
           <Settings2 strokeWidth={0.85} className="mr-2" />
           Settings
@@ -56,6 +56,3 @@ const SettingMenu = () => {
 
 export default SettingMenu;
 
-/*
-
-*/

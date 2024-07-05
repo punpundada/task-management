@@ -5,8 +5,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import useTasksList from "@/hooks/useTasksList";
 
 const TaskList = () => {
+  const taskList = useTasksList();
   return (
     <Card className="shadow-lg">
       <CardHeader>
@@ -15,7 +17,11 @@ const TaskList = () => {
           Here's a list of your tasks for this month!
         </CardDescription>
       </CardHeader>
-      <CardContent>HELLO</CardContent>
+      <CardContent>
+        {taskList.map(task=>(
+          <p>{task.title}</p>
+        ))}
+      </CardContent>
     </Card>
   );
 };
