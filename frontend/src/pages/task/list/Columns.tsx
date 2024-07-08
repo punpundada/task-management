@@ -1,17 +1,10 @@
+import TableAction from "@/components/TableAction";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { getTaskId, toCapitalCase } from "@/lib/utils";
 import { TaskType } from "@/types/task";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown, MoveUp } from "lucide-react";
 
 // export const columns =[
 //     columnHelper.accessor('id',{
@@ -80,7 +73,7 @@ export const columns: ColumnDef<TaskType>[] = [
     ),
     enableSorting: false,
     enableHiding: false,
-    maxSize: 10,
+    size: 10,
   },
   {
     id: "id",
@@ -99,7 +92,7 @@ export const columns: ColumnDef<TaskType>[] = [
     cell({ row }) {
       return <div className="text-start">{getTaskId(row.getValue("id"))}</div>;
     },
-    maxSize: 10,
+    size: 20,
   },
   {
     id: "label",
@@ -110,7 +103,6 @@ export const columns: ColumnDef<TaskType>[] = [
         <span className="border p-1 rounded-md">{row.getValue("label")}</span>
       );
     },
-    maxSize: 40,
   },
   {
     id: "title",
@@ -119,16 +111,27 @@ export const columns: ColumnDef<TaskType>[] = [
     cell({ row }) {
       return <div className="">{row.getValue("title")}</div>;
     },
+    size: 300,
+    minSize:200,
   },
   {
     id: "priority",
     accessorKey: "priority",
     header: () => <div className="">{"Priority"}</div>,
     cell({ row }) {
-      return <div className="">{toCapitalCase(row.getValue("priority"))}</div>;
+      return (
+        <div className="flex gap-4">
+          {row.getValue("priority") === "LOW" ? (
+            <MoveUp strokeWidth={1} />
+          ) : row.getValue("priority") === "MEDIUM" ? (
+            <MoveUp strokeWidth={1}  className="rotate-90" />
+          ) : (
+            <MoveUp strokeWidth={1} className="rotate-180" />
+          )}
+          {toCapitalCase(row.getValue("priority"))}
+        </div>
+      );
     },
-    maxSize: 100,
-    size: 100,
   },
   {
     id: "status",
@@ -137,34 +140,15 @@ export const columns: ColumnDef<TaskType>[] = [
     cell({ row }) {
       return <div className="">{toCapitalCase(row.getValue("status"))}</div>;
     },
-    maxSize: 100,
-    size: 100,
   },
   {
     id: "action",
     cell: ({ row }) => {
       const task = row.original;
       return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(getTaskId(task.id))}
-            >
-              Copy Task ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <TableAction task={task} />
       );
     },
+    size: 10,
   },
 ];
