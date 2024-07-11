@@ -92,11 +92,11 @@ export const columns: ColumnDef<TaskType>[] = [
       return (
         <div className="flex gap-2 items-center">
           {row.getValue("priority") === "LOW" ? (
-            <ArrowUpIcon strokeWidth={1} />
+            <ArrowUpIcon strokeWidth={1} className="rotate-180" />
           ) : row.getValue("priority") === "MEDIUM" ? (
             <ArrowUpIcon strokeWidth={1} className="rotate-90" />
           ) : (
-            <ArrowUpIcon strokeWidth={1} className="rotate-180" />
+            <ArrowUpIcon strokeWidth={1} />
           )}
           {toCapitalCase(row.getValue("priority"))}
         </div>
