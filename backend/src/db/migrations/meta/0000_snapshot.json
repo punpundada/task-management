@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "3101f74f-8d9f-4891-b313-2e80a4bafedd",
+  "id": "a1dfb68f-6a4c-466f-9186-92fae66a1426",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "email_verification": {
@@ -178,7 +178,7 @@
         },
         "title": {
           "name": "title",
-          "type": "text(300)",
+          "type": "text(55)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -209,6 +209,13 @@
         "label": {
           "name": "label",
           "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "description": {
+          "name": "description",
+          "type": "text(300)",
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
@@ -278,7 +285,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2024-06-28T16:51:22.635Z\"'"
+          "default": "'\"2024-07-12T12:47:57.045Z\"'"
         },
         "updated_at": {
           "name": "updated_at",
@@ -286,7 +293,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2024-06-28T16:51:22.635Z\"'"
+          "default": "'\"2024-07-12T12:47:57.045Z\"'"
         },
         "email_verified": {
           "name": "email_verified",

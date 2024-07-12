@@ -12,6 +12,7 @@ export const taskInsertSchema = createInsertSchema(task, {
   status: z.enum(["BACKLOG", "TODO", "INPROGRESS", "DONE", "CANCLED"], {
     required_error: "Status is required",
   }),
+  description:z.string({required_error:"Description is a required filed"})
 });
 
 export const tasksSelectSchema = createSelectSchema(task);
