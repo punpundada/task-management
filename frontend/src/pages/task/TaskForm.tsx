@@ -1,5 +1,6 @@
 import Combobox from "@/components/formcontrol/Combobox";
 import InputControl from "@/components/formcontrol/Input";
+import TextField from "@/components/formcontrol/TextField";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,11 +12,11 @@ import {
 import { Form } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import TaskService from "@/services/taskService";
-import { TaskInsetType, taskSInsertchema, TaskType } from "@/types/task";
+import { taskSInsertchema, TaskType } from "@/types/task";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const priority = [
   {
@@ -82,6 +83,7 @@ const TaskForm = () => {
       priority: "",
       status: "",
       title: "",
+      description:"",
     } as any,
   });
 
@@ -124,7 +126,7 @@ const TaskForm = () => {
       form.setValue("id", response.result.id);
     };
     fetchTask();
-  }, [id, form.setValue]);
+  }, [id, form]);
 
   return (
     <div className="">
@@ -155,6 +157,8 @@ const TaskForm = () => {
                 label="Status"
                 placeHolder="Status"
               />
+              <TextField name="description" label="Description" placeholder="Description" className="col-span-1 md:col-span-2" />
+
               <div className='flex gap-4'>
                 <Button type="submit">Save</Button>
                 <Button type="button" onClick={() => navigate("..")} variant={'outline'}>

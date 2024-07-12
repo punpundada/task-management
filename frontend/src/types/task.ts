@@ -29,6 +29,7 @@ export const taskSInsertchema = z.object({
   label: z.enum(["BUG", "FEATURE", "DOCUMENTATION"], {
     errorMap:()=>({message:"Please select label"})
   }),
+  description:z.string({required_error:"Please enter valid description"})
 });
 
 export type TaskType = z.infer<typeof taskSchema>;
