@@ -82,8 +82,6 @@ const TaskForm = () => {
       priority: "",
       status: "",
       title: "",
-      id: 0,
-      userId: "",
     } as any,
   });
 
@@ -110,6 +108,7 @@ const TaskForm = () => {
       form.setValue("status", response.result.status);
       form.setValue("title", response.result.title);
       form.setValue("userId", response.result.userId);
+      form.setValue("id", response.result.id);
     };
     fetchTask();
   }, [id, form.setValue]);
@@ -143,9 +142,9 @@ const TaskForm = () => {
                 label="Status"
                 placeHolder="Status"
               />
-              <div>
+              <div className='flex gap-4'>
                 <Button type="submit">Save</Button>
-                <Button type="button" onClick={() => navigate("..")}>
+                <Button type="button" onClick={() => navigate("..")} variant={'outline'}>
                   Back
                 </Button>
               </div>
