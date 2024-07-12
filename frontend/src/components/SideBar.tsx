@@ -1,12 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "./ui/tooltip";
-import { CirclePlus, ListOrdered, Settings } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
+import { CirclePlus, ListOrdered } from "lucide-react";
+import SettingMenu from "./SettingMenu";
+
+
 const SideBar = () => {
   const navigate = useNavigate();
 
@@ -16,12 +14,8 @@ const SideBar = () => {
         <div className="flex flex-col gap-4">
           <Tooltip>
             <TooltipTrigger>
-              <Button
-                variant={"ghost"}
-                size={"icon"}
-                onClick={() => navigate("/")}
-              >
-                <ListOrdered />
+              <Button variant={"ghost"} size={"icon"} onClick={() => navigate("/")}>
+                <ListOrdered strokeWidth={1} />
               </Button>
             </TooltipTrigger>
             <TooltipContent sideOffset={7} side="right">
@@ -31,12 +25,8 @@ const SideBar = () => {
 
           <Tooltip>
             <TooltipTrigger>
-              <Button
-                variant={"ghost"}
-                size={"icon"}
-                onClick={() => navigate("/add")}
-              >
-                <CirclePlus />
+              <Button variant={"ghost"} size={"icon"} onClick={() => navigate("/add")}>
+                <CirclePlus strokeWidth={1}  />
               </Button>
             </TooltipTrigger>
             <TooltipContent sideOffset={7} side="right">
@@ -46,14 +36,8 @@ const SideBar = () => {
         </div>
         <div>
           <Tooltip>
-            <TooltipTrigger>
-              <Button
-                variant={"ghost"}
-                size={"icon"}
-                onClick={() => navigate("/settings")}
-              >
-                <Settings className="hover:rotate-12 transition-all" />
-              </Button>
+            <TooltipTrigger asChild>
+              <SettingMenu />
             </TooltipTrigger>
             <TooltipContent sideOffset={7} side="right">
               <p>Settings</p>
