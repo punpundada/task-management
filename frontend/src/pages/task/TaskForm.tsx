@@ -11,7 +11,7 @@ import {
 import { Form } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import TaskService from "@/services/taskService";
-import { TaskInsetType, taskSInsertchema } from "@/types/task";
+import { TaskInsetType, taskSInsertchema, TaskType } from "@/types/task";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -74,7 +74,7 @@ const TaskForm = () => {
   const { id } = useParams();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const form = useForm<TaskInsetType>({
+  const form = useForm<TaskType>({
     resolver: zodResolver(taskSInsertchema),
     mode: "onChange",
     defaultValues: {
@@ -85,7 +85,20 @@ const TaskForm = () => {
     } as any,
   });
 
-  const onSubmit = async (data: TaskInsetType) => {
+  const onSubmit = async (data: TaskType) => {
+    if(id){
+      const updateRes = await TaskService.updateTask(data)
+      if (updateRes.isSuccess) {
+        toast({ title: "Success", description: updateRes.message });
+      } else {
+        toast({
+          title: "Error occured while saving task",
+          description: updateRes.message,
+          variant: "destructive",
+        });
+      }
+      return
+    }
     const savedTask = await TaskService.saveTask(data);
     if (savedTask.isSuccess) {
       toast({ title: "Success", description: savedTask.message });

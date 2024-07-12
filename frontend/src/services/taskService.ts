@@ -36,8 +36,17 @@ export default class TaskService {
 
   static async getTask(id:number){
     try {
-        const res = await axiosInstance.get<GenericRes<TaskType>>(`tasks/${id}`);
+        const res = await axiosInstance.get<GenericRes<TaskType>>(`tasks/get/${id}`);
         return res.data;
+    } catch (error) {
+      return errorResponse(error);
+    }
+  }
+
+  static async updateTask(task:TaskType){
+    try {
+      const res = await axiosInstance.post<GenericRes<TaskType>>(`tasks/update/${task.id}`,task);
+      return res.data;
     } catch (error) {
       return errorResponse(error);
     }
