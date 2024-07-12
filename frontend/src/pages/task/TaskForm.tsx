@@ -117,8 +117,8 @@ const TaskForm = () => {
     <div className="">
       <Card>
         <CardHeader>
-          <CardTitle>New Task.</CardTitle>
-          <CardDescription>Add a new task</CardDescription>
+          <CardTitle className="text-2xl font-bold">New Task.</CardTitle>
+          <CardDescription className="text-base">Add a new task</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
