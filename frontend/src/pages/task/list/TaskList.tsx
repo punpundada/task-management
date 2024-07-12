@@ -6,6 +6,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import useTasksList from "@/hooks/useTasksList";
+import DataTable from "./data-table";
+import { columns } from "./Columns";
 
 const TaskList = () => {
   const taskList = useTasksList();
@@ -18,9 +20,7 @@ const TaskList = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {taskList.map(task=>(
-          <p>{task.title}</p>
-        ))}
+        <DataTable columns={columns} data={taskList} />
       </CardContent>
     </Card>
   );

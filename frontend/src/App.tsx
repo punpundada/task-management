@@ -1,7 +1,7 @@
 import "./App.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Layout from "@/pages/Layout";
-import TaskList from "./pages/task/TaskList";
+import TaskList from "./pages/task/list/TaskList";
 import NotFound from "./pages/common/NotFound";
 import TaskForm from "./pages/task/TaskForm";
 import Settings from "./pages/Settings";
