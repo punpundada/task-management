@@ -26,7 +26,7 @@ const SettingMenu = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant={"ghost"} size={"icon"}>
-          <Settings className="hover:rotate-12 transition-all" />
+          <Settings  strokeWidth={1} className="hover:rotate-12 transition-all" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="space-y-2 text-2xl min-w-52" collisionPadding={30}>

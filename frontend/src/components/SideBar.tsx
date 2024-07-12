@@ -15,7 +15,7 @@ const SideBar = () => {
           <Tooltip>
             <TooltipTrigger>
               <Button variant={"ghost"} size={"icon"} onClick={() => navigate("/")}>
-                <ListOrdered />
+                <ListOrdered strokeWidth={1} />
               </Button>
             </TooltipTrigger>
             <TooltipContent sideOffset={7} side="right">
@@ -26,7 +26,7 @@ const SideBar = () => {
           <Tooltip>
             <TooltipTrigger>
               <Button variant={"ghost"} size={"icon"} onClick={() => navigate("/add")}>
-                <CirclePlus />
+                <CirclePlus strokeWidth={1}  />
               </Button>
             </TooltipTrigger>
             <TooltipContent sideOffset={7} side="right">
@@ -37,7 +37,7 @@ const SideBar = () => {
         <div>
           <Tooltip>
             <TooltipTrigger asChild>
-              <SettingMenu/>
+              <SettingMenu />
             </TooltipTrigger>
             <TooltipContent sideOffset={7} side="right">
               <p>Settings</p>

@@ -12,4 +12,14 @@ export default class TaskService{
             return errorResponse(error)
         }        
     }
+
+    static async deleteTask(taskId:number){
+        try {
+            const deletedTask = await axiosInstance.delete<GenericRes<boolean>>(`tasks/delete/${taskId}`)
+            return deletedTask.data;
+        } catch (error) {
+            console.error(error);
+            return errorResponse(error)
+        }
+    }
 }
