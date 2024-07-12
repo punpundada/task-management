@@ -5,6 +5,7 @@ const taskRouter = Router();
 
 taskRouter.post('/add',TaskController.addTask)
 taskRouter.get('/get',TaskController.getTasks)
+taskRouter.get('/get/:id',TaskController.getTask)
 taskRouter.post('/update/:id',TaskController.updateTask)
 taskRouter.delete('/delete/:id',TaskController.deleteTask)
 

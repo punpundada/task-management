@@ -22,6 +22,13 @@ class TasksService {
    const isDeleted =  await db.delete(task).where(eq(task.id,validId))
     return isDeleted.rowsAffected !== 0
   }
+
+  static async getTaskById(taskId:number){
+    const validId = z.number().parse(+taskId);
+    return await db.query.task.findFirst({
+      where:eq(task.id,taskId)
+    })
+  }
 }
 
 
