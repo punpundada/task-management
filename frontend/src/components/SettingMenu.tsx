@@ -10,9 +10,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuthContext } from "@/context/AuthContext";
 import AuthService from "@/services/authService";
+import { useNavigate } from "react-router-dom";
 
 
 const SettingMenu = () => {
+  const navigate = useNavigate();
   const { isAuthenticated, setData,email_verified } = useAuthContext();
 
   const handleLogout = async () => {
@@ -20,6 +22,7 @@ const SettingMenu = () => {
     if (data.isSuccess) {
       window.localStorage.removeItem("user");
       setData({ isAuthenticated: false, user: undefined });
+      navigate("auth/login")
     } 
   };
   return (
