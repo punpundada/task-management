@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
+import { useProjectsList } from "@/hooks/useProjectList";
 import TaskService from "@/services/taskService";
 import { taskSInsertchema, TaskType } from "@/types/task";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -73,6 +74,7 @@ const status = [
 
 const TaskForm = () => {
   const { id } = useParams();
+  const projectList  = useProjectsList();
   const { toast } = useToast();
   const navigate = useNavigate();
   const form = useForm<TaskType>({
@@ -84,6 +86,7 @@ const TaskForm = () => {
       status: "",
       title: "",
       description: "",
+      projectId:"",
     } as any,
   });
 
@@ -127,10 +130,10 @@ const TaskForm = () => {
       form.setValue("userId", response.result.userId);
       form.setValue("id", response.result.id);
       form.setValue("description",response.result.description)
+      form.setValue("projectId",+response.result.projectId);
     };
     fetchTask();
   }, [id, form]);
-
   return (
     <div className="">
       <Card>
@@ -149,7 +152,13 @@ const TaskForm = () => {
                 name="title"
                 placeholder="Enter Task Title"
               />
-              <div className="col-span-1 md:col-span-2 lg:col-span-3">
+              <Combobox
+                name="projectId"
+                options={projectList}
+                label="Project"
+                placeHolder="Priority"
+              />
+              <div className="col-span-full">
                 <TextField
                   name="description"
                   label="Description"

@@ -19,11 +19,9 @@ import {
   FormMessage,
 } from "../ui/form";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { Options } from "@/types/util";
 
-type Options = {
-  label: string;
-  value: string;
-};
+
 
 interface Combobox<T extends FieldValues> {
   name: Path<T>;
