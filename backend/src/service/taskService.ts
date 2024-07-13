@@ -25,7 +25,7 @@ class TasksService {
 
   static async getTaskById(taskId:number){
     const validId = z.number().parse(+taskId);
-    return await db.query.projectTable.findFirst({
+    return await db.query.task.findFirst({
       where:eq(task.id,taskId)
     })
   }

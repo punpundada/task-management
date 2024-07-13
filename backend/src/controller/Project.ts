@@ -77,7 +77,7 @@ export default class ProjectController {
     next: NextFunction
   ) {
     try {
-      const project = await TasksService.getTaskById(req.params.id);
+      const project = await ProjectService.getProjectByProjectId(req.params.id);
       if (project) {
         return res.status(STATUS_CODES.OK).json({
           isSuccess: true,
