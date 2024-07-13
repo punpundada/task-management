@@ -123,6 +123,7 @@ const TaskForm = () => {
     const fetchTask = async () => {
       const response = await TaskService.getTask(+id);
       if (!response?.isSuccess) return;
+      console.log(response.result.projectId)
       form.setValue("label", response.result.label);
       form.setValue("priority", response.result.priority);
       form.setValue("status", response.result.status);
@@ -130,7 +131,7 @@ const TaskForm = () => {
       form.setValue("userId", response.result.userId);
       form.setValue("id", response.result.id);
       form.setValue("description",response.result.description)
-      form.setValue("projectId",+response.result.projectId);
+      form.setValue("projectId",response.result.projectId.toString() as any);
     };
     fetchTask();
   }, [id, form]);
@@ -156,7 +157,7 @@ const TaskForm = () => {
                 name="projectId"
                 options={projectList}
                 label="Project"
-                placeHolder="Priority"
+                placeHolder="Project"
               />
               <div className="col-span-full">
                 <TextField
