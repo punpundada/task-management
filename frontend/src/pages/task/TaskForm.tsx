@@ -83,15 +83,16 @@ const TaskForm = () => {
       priority: "",
       status: "",
       title: "",
-      description:"",
+      description: "",
     } as any,
   });
 
   const onSubmit = async (data: TaskType) => {
-    if(id){
-      const updateRes = await TaskService.updateTask(data)
+    if (id) {
+      const updateRes = await TaskService.updateTask(data);
       if (updateRes.isSuccess) {
         toast({ title: "Success", description: updateRes.message });
+        form.reset()
       } else {
         toast({
           title: "Error occured while saving task",
@@ -99,11 +100,12 @@ const TaskForm = () => {
           variant: "destructive",
         });
       }
-      return
+      return;
     }
     const savedTask = await TaskService.saveTask(data);
     if (savedTask.isSuccess) {
       toast({ title: "Success", description: savedTask.message });
+      form.reset()
     } else {
       toast({
         title: "Error occured while saving task",
@@ -124,6 +126,7 @@ const TaskForm = () => {
       form.setValue("title", response.result.title);
       form.setValue("userId", response.result.userId);
       form.setValue("id", response.result.id);
+      form.setValue("description",response.result.description)
     };
     fetchTask();
   }, [id, form]);
@@ -138,11 +141,21 @@ const TaskForm = () => {
         <CardContent>
           <Form {...form}>
             <form
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-4"
               onSubmit={form.handleSubmit(onSubmit)}
             >
+              <InputControl
+                label={"Task Title"}
+                name="title"
+                placeholder="Enter Task Title"
+              />
               <div className="col-span-1 md:col-span-2 lg:col-span-3">
-                <InputControl label={"Task Title"} name="title" />
+                <TextField
+                  name="description"
+                  label="Description"
+                  placeholder="Enter Task Description"
+                  className="h-24"
+                />
               </div>
               <Combobox name="label" options={label} label="Label" placeHolder="Label" />
               <Combobox
@@ -157,11 +170,10 @@ const TaskForm = () => {
                 label="Status"
                 placeHolder="Status"
               />
-              <TextField name="description" label="Description" placeholder="Description" className="col-span-1 md:col-span-2" />
 
-              <div className='flex gap-4'>
+              <div className="flex gap-4 justify-end col-span-full">
                 <Button type="submit">Save</Button>
-                <Button type="button" onClick={() => navigate("..")} variant={'outline'}>
+                <Button type="button" onClick={() => navigate("..")} variant={"outline"}>
                   Back
                 </Button>
               </div>
