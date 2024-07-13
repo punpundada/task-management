@@ -1,4 +1,4 @@
-import { MoreHorizontal } from "lucide-react";
+import { CircleCheckBig, MoreHorizontal } from "lucide-react";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -22,14 +22,27 @@ import {
 } from "@/components/ui/dialog";
 import React from "react";
 import TaskService from "@/services/taskService";
+import { useToast } from "./ui/use-toast";
 
 const TableAction = ({ task }: { task: TaskType }) => {
+  const { toast } = useToast();
   const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
-  const handleDelete = async ()=>{
+  const handleDelete = async () => {
     await TaskService.deleteTask(task.id);
-    setOpen(false)
-  }
+    setOpen(false);
+  };
+  const handleCopy = () => {
+    navigator.clipboard.writeText(getTaskId(task.id));
+    toast({
+      title: (
+        <div className="flex gap-2 items-center">
+          <CircleCheckBig />
+          {`${getTaskId(task.id)} Copied to clipboard`}
+        </div>
+      ) as any,
+    });
+  };
   return (
     <>
       <DropdownMenu>
@@ -41,18 +54,12 @@ const TableAction = ({ task }: { task: TaskType }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem
-            onClick={() => navigator.clipboard.writeText(getTaskId(task.id))}
-          >
-            Copy Task ID
-          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleCopy}>Copy Task ID</DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => navigate(`edit/${task.id}`)}>
             Edit Task
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
-            Delete
-          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setOpen(true)}>Delete</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <Dialog open={open} onOpenChange={setOpen}>
@@ -61,26 +68,15 @@ const TableAction = ({ task }: { task: TaskType }) => {
             <DialogTitle>
               Delete <span className="">{getTaskId(task.id)}</span>
             </DialogTitle>
-            <DialogDescription>
-              Task will be deleted permanantly...
-            </DialogDescription>
+            <DialogDescription>Task will be deleted permanantly...</DialogDescription>
           </DialogHeader>
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
               <>
-
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={() => setOpen(false)}
-                >
+                <Button type="button" variant="secondary" onClick={() => setOpen(false)}>
                   Close
                 </Button>
-                <Button
-                  type="button"
-                  variant="destructive"
-                  onClick={handleDelete}
-                >
+                <Button type="button" variant="destructive" onClick={handleDelete}>
                   Delete
                 </Button>
               </>

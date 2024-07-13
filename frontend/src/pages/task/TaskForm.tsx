@@ -139,8 +139,8 @@ const TaskForm = () => {
     <div className="">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">New Task.</CardTitle>
-          <CardDescription className="text-base">Add a new task</CardDescription>
+          <CardTitle className="text-2xl font-bold">{id ? "Edit Task" :"New Task."}</CardTitle>
+          <CardDescription className="text-base">{id ? `Edit task with id: ${form.getValues('id')}` :"Add a new task"}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
