@@ -8,6 +8,13 @@
       "when": 1720788477079,
       "tag": "0000_luxuriant_nova",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1720846766943,
+      "tag": "0001_nostalgic_supreme_intelligence",
+      "breakpoints": true
     }
   ]
 }
