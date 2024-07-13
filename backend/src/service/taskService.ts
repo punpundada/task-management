@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import db from "../db";
 import { task } from "../db/schema";
 import { taskInsertSchema, tasksSelectSchema, type TaskInsert, type TaskSelect } from "../types/task";
@@ -10,7 +10,7 @@ class TasksService {
     return await db.insert(task).values(validTask).returning();
   }
   static async getTasks(userId:string){
-    return await db.select().from(task).where(eq(task.userId,userId))
+    return await db.select().from(task).where(eq(task.userId,userId)).orderBy(desc(task.id));
   }
   static async updateTaskById(taskToUpdate:TaskSelect){
     const validTask = tasksSelectSchema.parse(taskToUpdate);
