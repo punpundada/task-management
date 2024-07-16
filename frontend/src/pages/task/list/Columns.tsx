@@ -83,6 +83,10 @@ export const columns: ColumnDef<TaskType>[] = [
       );
     },
     enableResizing: true,
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
+    
   },
   {
     id: "priority",
@@ -103,6 +107,9 @@ export const columns: ColumnDef<TaskType>[] = [
       );
     },
     enableResizing: true,
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
   },
   {
     id: "action",
