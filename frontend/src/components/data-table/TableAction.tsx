@@ -9,8 +9,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { getTaskId, toCapitalCase } from "@/lib/utils";
-import { TaskTableList, TaskType } from "@/types/task";
-import { Link, useNavigate } from "react-router-dom";
+import { TaskTableList } from "@/types/task";
+import {  useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogClose,
