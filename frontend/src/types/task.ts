@@ -38,9 +38,8 @@ export const taskSInsertchema = z.object({
     .min(10, "Minimum 10 characters are required")
     .max(300, { message: "Max character count reached" }),
   projectId: z.coerce.number({
-    required_error: "Please select project",
-    invalid_type_error: "Please select",
-  }),
+    errorMap:()=>({message:"Please select project"})
+  }).min(1,"Please select project"),
 });
 
 export type TaskType = z.infer<typeof taskSchema>;
