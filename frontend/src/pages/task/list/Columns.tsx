@@ -1,6 +1,6 @@
 import { DataTableColumnHeader } from "@/components/data-table/DataTableColumnHeader";
 import { statuses } from "@/components/data-table/DataTableToolbar";
-import TableAction from "@/components/TableAction";
+import TableAction from "@/components/data-table/TableAction";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { getTaskId, toCapitalCase } from "@/lib/utils";
@@ -115,7 +115,7 @@ export const columns: ColumnDef<TaskTableList>[] = [
     id: "action",
     cell: ({ row }) => {
       const task = row.original;
-      return <TableAction task={task as any} />;
+      return <TableAction task={task} />;
     },
     size:20,
   },
