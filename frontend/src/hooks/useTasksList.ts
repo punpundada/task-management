@@ -1,12 +1,12 @@
 import TaskService from "@/services/taskService"
-import { TaskType } from "@/types/task"
+import { TaskTableList } from "@/types/task"
 import React from "react"
 
 const useTasksList = ()=>{
-    const [list,setList] = React.useState<TaskType[]>([])
+    const [list,setList] = React.useState<TaskTableList[]>([])
     React.useEffect(()=>{
         const fetchData = async () => {
-            const data = await TaskService.getAllTasks();
+            const data = await TaskService.getTableList();
             if(data.isSuccess){
                 setList(data.result);
             }

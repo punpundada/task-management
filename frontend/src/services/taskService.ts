@@ -1,6 +1,6 @@
 import { axiosInstance } from "@/lib/constants";
 import { errorResponse } from "@/lib/utils";
-import { TaskInsetType, TaskType } from "@/types/task";
+import { TaskInsetType, TaskTableList, TaskType } from "@/types/task";
 import { GenericRes } from "@/types/util";
 
 export default class TaskService {
@@ -47,6 +47,15 @@ export default class TaskService {
     try {
       const res = await axiosInstance.post<GenericRes<TaskType>>(`tasks/update/${task.id}`,task);
       return res.data;
+    } catch (error) {
+      return errorResponse(error);
+    }
+  }
+
+  static async getTableList(){
+    try {
+      const response = await axiosInstance.get<GenericRes<TaskTableList[]>>("tasks/get-table-list");
+      return response.data;
     } catch (error) {
       return errorResponse(error);
     }

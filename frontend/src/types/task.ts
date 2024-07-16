@@ -46,3 +46,20 @@ export const taskSInsertchema = z.object({
 export type TaskType = z.infer<typeof taskSchema>;
 
 export type TaskInsetType = z.infer<typeof taskSInsertchema>;
+
+
+export interface TaskTableList {
+  id: number
+  title: string
+  status: string
+  priority: string
+  label: string
+  projectId: number
+  project: Project
+}
+
+export interface Project {
+  name: string
+  id: number
+}
+
