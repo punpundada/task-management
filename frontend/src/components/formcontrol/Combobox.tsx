@@ -54,6 +54,7 @@ const Combobox = <T extends FieldValues>(props: Combobox<T>) => {
                     aria-expanded={open}
                     className="w-full justify-between"
                     ref={buttonRef}
+                    disabled={!!props.disabled}
                   >
                     {field.value
                       ? props.options.find((option) => option.value === field.value)

@@ -23,14 +23,19 @@ import {
 import React from "react";
 import TaskService from "@/services/taskService";
 import { useToast } from "@/components/ui/use-toast";
+import useTaskStore from "@/store/taskStore";
 
 const TableAction = ({ task }: { task: TaskTableList }) => {
+  const removeTaskById = useTaskStore(state=>state.removeTaskById);
   const { toast } = useToast();
   const [open, setOpen] = React.useState(false);
   const [openView, setOpenView] = React.useState(false);
   const navigate = useNavigate();
   const handleDelete = async () => {
-    await TaskService.deleteTask(task.id);
+    const deletedTask = await TaskService.deleteTask(task.id);
+    if(deletedTask.isSuccess){
+      removeTaskById(task.id)
+    }
     setOpen(false);
   };
   const handleCopy = () => {
