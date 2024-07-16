@@ -29,6 +29,25 @@ class TasksService {
       where:eq(task.id,taskId)
     })
   }
+
+  static async getTableList(userId:string){
+    return await db.query.task.findMany({
+      where:(eq(task.userId,userId)),
+      orderBy:desc(task.id),
+      with:{
+        project:{
+          columns:{
+            name:true,
+            id:true
+          }
+        }
+      },
+      columns:{
+        userId:false,
+        description:false,
+      }
+    })
+  }
 }
 
 

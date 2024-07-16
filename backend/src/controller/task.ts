@@ -123,6 +123,23 @@ class TaskController {
       next(error)
     }
   }
+
+  static async getTableList(
+    req: Request<unknown, unknown, unknown>,
+    res: Response<Res<any>>,
+    next: NextFunction
+  ){
+    try {
+      const tableList = await TasksService.getTableList(getUserOrError(res.locals)?.user.id);
+      return res.status(STATUS_CODES.OK).json({
+        isSuccess:true,
+        message:"Request was successful",
+        result:tableList ?? []
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 export default TaskController;
