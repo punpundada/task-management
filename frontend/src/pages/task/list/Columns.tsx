@@ -4,11 +4,11 @@ import TableAction from "@/components/TableAction";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { getTaskId, toCapitalCase } from "@/lib/utils";
-import { TaskType } from "@/types/task";
+import { TaskTableList } from "@/types/task";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
 import { ColumnDef } from "@tanstack/react-table";
 
-export const columns: ColumnDef<TaskType>[] = [
+export const columns: ColumnDef<TaskTableList>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -58,6 +58,14 @@ export const columns: ColumnDef<TaskType>[] = [
     enableResizing: true,
   },
   {
+    id:"project",
+    accessorKey:"project",
+    header:({ column }) => <DataTableColumnHeader column={column} title={"Project"} />,
+    cell({row}){
+      return <span>{(row.getValue('project') as any).name}</span>
+    }
+  },
+  {
     id: "title",
     accessorKey: "title",
     header: ({ column }) => <DataTableColumnHeader column={column} title={"Title"} />,
@@ -83,6 +91,10 @@ export const columns: ColumnDef<TaskType>[] = [
       );
     },
     enableResizing: true,
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
+    
   },
   {
     id: "priority",
@@ -103,12 +115,15 @@ export const columns: ColumnDef<TaskType>[] = [
       );
     },
     enableResizing: true,
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
   },
   {
     id: "action",
     cell: ({ row }) => {
       const task = row.original;
-      return <TableAction task={task} />;
+      return <TableAction task={task as any} />;
     },
     size: 10,
     enableResizing: true,

@@ -10,9 +10,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useAuthContext } from "@/context/AuthContext";
 import AuthService from "@/services/authService";
+import { useNavigate } from "react-router-dom";
 
 
 const SettingMenu = () => {
+  const navigate = useNavigate();
   const { isAuthenticated, setData,email_verified } = useAuthContext();
 
   const handleLogout = async () => {
@@ -20,6 +22,7 @@ const SettingMenu = () => {
     if (data.isSuccess) {
       window.localStorage.removeItem("user");
       setData({ isAuthenticated: false, user: undefined });
+      navigate("auth/login")
     } 
   };
   return (
@@ -32,7 +35,7 @@ const SettingMenu = () => {
       <DropdownMenuContent className="space-y-2 text-2xl min-w-52" collisionPadding={30}>
         <DropdownMenuLabel className="text-xl">My Account</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="">
+        <DropdownMenuItem className="" onClick={()=>navigate('/user/profile')}>
           <CircleUserRound className="mr-2" strokeWidth={0.85} /> Profile
         </DropdownMenuItem>
        {!email_verified && <DropdownMenuItem className="">

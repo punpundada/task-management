@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "a1dfb68f-6a4c-466f-9186-92fae66a1426",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "e6aa4f6c-7448-4cf8-93a1-9fccec25ab1f",
+  "prevId": "a1dfb68f-6a4c-466f-9186-92fae66a1426",
   "tables": {
     "email_verification": {
       "name": "email_verification",
@@ -56,6 +56,50 @@
         "email_verification_user_id_users_id_fk": {
           "name": "email_verification_user_id_users_id_fk",
           "tableFrom": "email_verification",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "projects": {
+      "name": "projects",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "projects_user_id_users_id_fk": {
+          "name": "projects_user_id_users_id_fk",
+          "tableFrom": "projects",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
@@ -285,7 +329,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2024-07-12T12:47:57.045Z\"'"
+          "default": "'\"2024-07-13T04:59:26.920Z\"'"
         },
         "updated_at": {
           "name": "updated_at",
@@ -293,7 +337,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2024-07-12T12:47:57.045Z\"'"
+          "default": "'\"2024-07-13T04:59:26.920Z\"'"
         },
         "email_verified": {
           "name": "email_verified",

@@ -23,11 +23,12 @@ CREATE TABLE `session` (
 --> statement-breakpoint
 CREATE TABLE `tasks` (
 	`id` integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-	`title` text(300) NOT NULL,
+	`title` text(55) NOT NULL,
 	`user_id` text NOT NULL,
 	`status` text DEFAULT 'TODO',
 	`priority` text DEFAULT 'LOW',
 	`label` text NOT NULL,
+	`description` text(300) NOT NULL,
 	FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON UPDATE no action ON DELETE no action
 );
 --> statement-breakpoint
@@ -37,8 +38,8 @@ CREATE TABLE `users` (
 	`email` text NOT NULL,
 	`password` text(255) NOT NULL,
 	`is_active` integer DEFAULT true,
-	`created_at` integer DEFAULT '"2024-06-28T16:51:22.635Z"' NOT NULL,
-	`updated_at` integer DEFAULT '"2024-06-28T16:51:22.635Z"' NOT NULL,
+	`created_at` integer DEFAULT '"2024-07-12T12:47:57.045Z"' NOT NULL,
+	`updated_at` integer DEFAULT '"2024-07-12T12:47:57.045Z"' NOT NULL,
 	`email_verified` integer DEFAULT false
 );
 --> statement-breakpoint

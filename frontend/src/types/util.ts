@@ -7,3 +7,8 @@ export type GenericRes<T,>={
     message:string
     issues:Array<Record<string,unknown>>
 }
+
+export type Options = {
+    label: string;
+    value: string;
+  };

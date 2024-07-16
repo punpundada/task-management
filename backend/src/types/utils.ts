@@ -8,3 +8,8 @@ export const emailSchema = z
 export const passwordSchema = z
   .string({ required_error: "Password is required" })
   .min(6, { message: "Password must be at least 6 character long" });
+
+export type Option = {
+  value:string,
+  label:string
+}

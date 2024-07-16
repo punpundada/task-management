@@ -21,7 +21,7 @@ import { useToast } from "@/components/ui/use-toast";
 const Login = () => {
   const navigate = useNavigate();
   const {toast}=useToast()
-  const { setData, isAuthenticated } = useAuthContext();
+  const { setData, isAuthenticated,setEmail_verified } = useAuthContext();
   const form = useForm<LoginType>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -35,9 +35,10 @@ const Login = () => {
     const result = await AuthService.login(data);
     if (result?.isSuccess) {
       toast({ title: "Success", description: result.message, variant: "default" });
-      navigate("/");
       setData({ isAuthenticated: true, user: result.result });
       window.localStorage.setItem("user", JSON.stringify(result.result));
+      setEmail_verified(result.result.email_verified);
+      navigate("/");
     } else {
       toast({
         title: "Error while logging in",

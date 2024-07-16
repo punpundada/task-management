@@ -98,6 +98,48 @@ class TaskController {
       next(error)
     }
   }
+
+  static async getTask(
+    req: Request<{id:number}, unknown, unknown>,
+    res: Response<Res<TaskSelect>>,
+    next: NextFunction
+  ){
+    try {
+      getUserOrError(res.locals);
+      const task = await TasksService.getTaskById(req.params.id);
+      if(!task){
+        return res.status(STATUS_CODES.NOT_FOUND).json({
+          isSuccess:false,
+          issues:[],
+          message:"Task not found"
+        })
+      }
+      return res.status(STATUS_CODES.OK).json({
+        isSuccess:true,
+        message:"Request was successful",
+        result:task
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async getTableList(
+    req: Request<unknown, unknown, unknown>,
+    res: Response<Res<any>>,
+    next: NextFunction
+  ){
+    try {
+      const tableList = await TasksService.getTableList(getUserOrError(res.locals)?.user.id);
+      return res.status(STATUS_CODES.OK).json({
+        isSuccess:true,
+        message:"Request was successful",
+        result:tableList ?? []
+      })
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 export default TaskController;

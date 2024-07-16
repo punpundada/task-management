@@ -7,11 +7,13 @@ import TaskForm from "./pages/task/TaskForm";
 import Settings from "./pages/Settings";
 import Login from "./pages/auth/Login";
 import Signup from "./pages/auth/Signup";
-import React from "react";
+import React, { Suspense } from "react";
 import { useAuthContext } from "./context/AuthContext";
 import { User } from "./types/user";
 import ProtectedRoute from "./pages/common/ProtectedRoute";
 import { Toaster } from "./components/ui/toaster";
+
+const Profile = React.lazy(()=>import("@/pages/user/Profile"));
 
 const router = createBrowserRouter([
   {
@@ -38,6 +40,15 @@ const router = createBrowserRouter([
         path: "settings",
         element: <Settings />,
       },
+      {
+        path:"user",
+        children:[
+          {
+            path:"profile",
+            element:<Suspense fallback={<>...Loading</>}><Profile/></Suspense>
+          }
+        ]
+      }
     ],
   },
   {
