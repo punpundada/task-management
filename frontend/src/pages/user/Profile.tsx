@@ -6,7 +6,6 @@ import { useToast } from "@/components/ui/use-toast";
 import ProjectService from "@/services/projectService";
 import { ProjectInsetType, projectSchema } from "@/types/project";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React from "react";
 import { useForm } from "react-hook-form";
 
 const Profile = () => {

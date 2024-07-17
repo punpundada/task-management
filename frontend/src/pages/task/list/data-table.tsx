@@ -1,7 +1,5 @@
 import { DataTablePagination } from "@/components/data-table/DataTablePagination";
 import { DataTableToolbar } from "@/components/data-table/DataTableToolbar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
