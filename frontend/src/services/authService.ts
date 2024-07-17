@@ -34,7 +34,6 @@ export default class AuthService {
       const response = await axiosInstance.post<GenericRes<User>>("auth/signup", data);
       return response.data;
     } catch (error: any) {
-      console.log(error);
       const ret: GenericRes<boolean> = {
         isSuccess: false,
         issues: [],
@@ -52,7 +51,6 @@ export default class AuthService {
       );
       return response.data;
     } catch (error: any) {
-      console.log(error);
       const ret: GenericRes<boolean> = {
         isSuccess: false,
         issues: [],
@@ -69,7 +67,6 @@ export default class AuthService {
       );
       return res.data;
     } catch (error: any) {
-      console.log(error);
       const ret: GenericRes<boolean> = {
         isSuccess: false,
         issues: [],

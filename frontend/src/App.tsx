@@ -1,17 +1,19 @@
 import "./App.css";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Layout from "@/pages/Layout";
-import TaskList from "./pages/task/list/TaskList";
-import NotFound from "./pages/common/NotFound";
-import TaskForm from "./pages/task/TaskForm";
-import Settings from "./pages/Settings";
-import Login from "./pages/auth/Login";
-import Signup from "./pages/auth/Signup";
-import React from "react";
+import React, { Suspense } from "react";
 import { useAuthContext } from "./context/AuthContext";
 import { User } from "./types/user";
 import ProtectedRoute from "./pages/common/ProtectedRoute";
 import { Toaster } from "./components/ui/toaster";
+
+const Profile = React.lazy(()=>import("@/pages/user/Profile"));
+const Signup = React.lazy(()=>import('./pages/auth/Signup'))
+const Login = React.lazy(()=>import("./pages/auth/Login"))
+const TaskForm = React.lazy(()=>import("./pages/task/TaskForm"))
+const TaskList = React.lazy(()=>import("./pages/task/list/TaskList"))
+const Settings = React.lazy(()=>import("./pages/Settings"))
+const NotFound = React.lazy(()=>import("./pages/common/NotFound"))
 
 const router = createBrowserRouter([
   {
@@ -24,20 +26,29 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <TaskList />,
+        element: <Suspense fallback={<>...Loading</>}><TaskList /></Suspense>,
       },
       {
         path: "add",
-        element: <TaskForm />,
+        element: <Suspense fallback={<>...Loading</>}><TaskForm /></Suspense>,
       },
       {
         path: "edit/:id",
-        element: <TaskForm />,
+        element: <Suspense fallback={<>...Loading</>}><TaskForm /></Suspense>,
       },
       {
         path: "settings",
-        element: <Settings />,
+        element: <Suspense fallback={<>...Loading</>}><Settings /></Suspense>,
       },
+      {
+        path:"user",
+        children:[
+          {
+            path:"profile",
+            element:<Suspense fallback={<>...Loading</>}><Profile/></Suspense>
+          }
+        ]
+      }
     ],
   },
   {
@@ -45,17 +56,17 @@ const router = createBrowserRouter([
     children: [
       {
         path: "login",
-        element: <Login />,
+        element: <Suspense fallback={<>...Loading</>}><Login /></Suspense>,
       },
       {
         path: "signup",
-        element: <Signup />,
+        element: <Suspense fallback={<>...Loading</>}><Signup /></Suspense>,
       },
     ],
   },
   {
     path: "*",
-    element: <NotFound />,
+    element: <Suspense fallback={<>...Loading</>}><NotFound /></Suspense>,
   },
 ]);
 

@@ -1,8 +1,8 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "a1dfb68f-6a4c-466f-9186-92fae66a1426",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "d14dd10e-3b44-43e5-b6cf-37bec6376088",
+  "prevId": "e6aa4f6c-7448-4cf8-93a1-9fccec25ab1f",
   "tables": {
     "email_verification": {
       "name": "email_verification",
@@ -56,6 +56,50 @@
         "email_verification_user_id_users_id_fk": {
           "name": "email_verification_user_id_users_id_fk",
           "tableFrom": "email_verification",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "projects": {
+      "name": "projects",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "integer",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "projects_user_id_users_id_fk": {
+          "name": "projects_user_id_users_id_fk",
+          "tableFrom": "projects",
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
@@ -219,6 +263,13 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
+        },
+        "project_id": {
+          "name": "project_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
         }
       },
       "indexes": {},
@@ -229,6 +280,19 @@
           "tableTo": "users",
           "columnsFrom": [
             "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "tasks_project_id_projects_id_fk": {
+          "name": "tasks_project_id_projects_id_fk",
+          "tableFrom": "tasks",
+          "tableTo": "projects",
+          "columnsFrom": [
+            "project_id"
           ],
           "columnsTo": [
             "id"
@@ -285,7 +349,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2024-07-12T12:47:57.045Z\"'"
+          "default": "'\"2024-07-13T06:45:53.949Z\"'"
         },
         "updated_at": {
           "name": "updated_at",
@@ -293,7 +357,7 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false,
-          "default": "'\"2024-07-12T12:47:57.045Z\"'"
+          "default": "'\"2024-07-13T06:45:53.949Z\"'"
         },
         "email_verified": {
           "name": "email_verified",

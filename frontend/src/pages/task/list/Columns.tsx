@@ -1,14 +1,14 @@
 import { DataTableColumnHeader } from "@/components/data-table/DataTableColumnHeader";
 import { statuses } from "@/components/data-table/DataTableToolbar";
-import TableAction from "@/components/TableAction";
+import TableAction from "@/components/data-table/TableAction";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { getTaskId, toCapitalCase } from "@/lib/utils";
-import { TaskType } from "@/types/task";
+import { TaskTableList } from "@/types/task";
 import { ArrowUpIcon } from "@radix-ui/react-icons";
 import { ColumnDef } from "@tanstack/react-table";
 
-export const columns: ColumnDef<TaskType>[] = [
+export const columns: ColumnDef<TaskTableList>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -32,20 +32,16 @@ export const columns: ColumnDef<TaskType>[] = [
         />
       </div>
     ),
-    enableSorting: false,
-    enableHiding: false,
-    enableResizing: true,
-    size: 10,
+    size:20,
   },
   {
     id: "id",
     accessorKey: "id",
     header: ({ column }) => <DataTableColumnHeader column={column} title={"id"} />,
     cell({ row }) {
-      return <div className="text-start">{getTaskId(row.getValue("id"))}</div>;
+      return <div className="text-start whitespace-nowrap">{getTaskId(row.getValue("id"))}</div>;
     },
-    size: 20,
-    enableResizing: true,
+    size:30,
   },
   {
     id: "label",
@@ -54,19 +50,23 @@ export const columns: ColumnDef<TaskType>[] = [
     cell({ row }) {
       return <Badge className="border p-1 rounded-md">{row.getValue("label")}</Badge>;
     },
-    size:10,
-    enableResizing: true,
+    size:30,
+  },
+  {
+    id:"project",
+    accessorKey:"project",
+    header:({ column }) => <DataTableColumnHeader column={column} title={"Project"} />,
+    cell({row}){
+      return <span className="whitespace-nowrap">{(row.getValue('project') as any).name}</span>
+    }
   },
   {
     id: "title",
     accessorKey: "title",
     header: ({ column }) => <DataTableColumnHeader column={column} title={"Title"} />,
     cell({ row }) {
-      return <div className="">{row.getValue("title")}</div>;
+      return <div className="whitespace-nowrap">{row.getValue("title")}</div>;
     },
-    size: 300,
-    minSize: 200,
-    enableResizing: true,
   },
   {
     id: "status",
@@ -83,6 +83,10 @@ export const columns: ColumnDef<TaskType>[] = [
       );
     },
     enableResizing: true,
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
+    
   },
   {
     id: "priority",
@@ -103,6 +107,9 @@ export const columns: ColumnDef<TaskType>[] = [
       );
     },
     enableResizing: true,
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
+    },
   },
   {
     id: "action",
@@ -110,7 +117,6 @@ export const columns: ColumnDef<TaskType>[] = [
       const task = row.original;
       return <TableAction task={task} />;
     },
-    size: 10,
-    enableResizing: true,
+    size:20,
   },
 ];

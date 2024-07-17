@@ -8,6 +8,7 @@ import { csrfProtection, validateSession } from "./middleware/authMiddleware";
 import taskRouter from "./routes/task";
 import cors from "cors";
 import type { CorsOptions } from "cors";
+import projectRouter from "./routes/project";
 
 const app = express();
 
@@ -54,6 +55,7 @@ app.use(validateSession);
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/tasks", taskRouter);
+app.use("/api/projects", projectRouter);
 
 app.use(errorHandler);
 

@@ -61,17 +61,17 @@ export const statuses = [
 export const priorities = [
   {
     label: "Low",
-    value: "low",
+    value: "LOW",
     icon: ArrowDownIcon,
   },
   {
     label: "Medium",
-    value: "medium",
+    value: "MEDIUM",
     icon: ArrowRightIcon,
   },
   {
     label: "High",
-    value: "high",
+    value: "HIGH",
     icon: ArrowUpIcon,
   },
 ];
@@ -85,15 +85,16 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex flex-1 items-center space-x-2">
+      <div className="flex flex-col md:flex-row flex-1 items-start md:items-center space-x-2 gap-4 md:gap-0">
         <Input
           placeholder="Filter tasks..."
           value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("title")?.setFilterValue(event.target.value)
           }
-          className="h-8 w-[200px] lg:w-[250px]"
+          className="h-8 w-full  md:w-[200px] lg:w-[250px]"
         />
+        <div className="flex gap-4 md:gap-[7px] flex-1">
         {table.getColumn("status") && (
           <DataTableFacetedFilter
             column={table.getColumn("status")}
@@ -108,6 +109,7 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
             options={priorities}
           />
         )}
+        </div>
         {isFiltered && (
           <Button
             variant="ghost"
