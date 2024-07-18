@@ -5,18 +5,21 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import useTasksList from "@/hooks/useTasksList";
 import DataTable from "./data-table";
 import { columns } from "./Columns";
 import { useAuthContext } from "@/context/AuthContext";
+import useTasksList from "@/hooks/useTasksList";
 
 const TaskList = () => {
-  const taskList = useTasksList();
-  const {user} = useAuthContext()
+  const { user } = useAuthContext();
+  const taskList = useTasksList()
+
   return (
     <Card className="shadow-lg">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold">Welcome {user?.name}.</CardTitle>
+        <CardTitle className="text-2xl font-bold">
+          Welcome {user?.name}.
+        </CardTitle>
         <CardDescription className="text-base">
           Here's a list of your tasks!
         </CardDescription>
