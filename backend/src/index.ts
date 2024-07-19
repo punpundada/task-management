@@ -16,6 +16,8 @@ const allowedOrions = ["http://localhost:5173", "http://localhost:5174", "http:/
     
 app.use(cors({credentials:true,origin:["http://localhost:5173","https://task-management-frontend-b5s2.onrender.com"]}));
 
+app.use(cors({credentials:true,origin:["http://localhost:4353","http://localhost:5173"]}));
+
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 

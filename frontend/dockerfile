@@ -1,0 +1,27 @@
+FROM node:20.15.1-alpine3.20 as base
+WORKDIR /usr/src/app
+
+
+FROM base as install
+RUN mkdir -p /temp/prod
+COPY package*.json /temp/prod
+RUN cd /temp/prod && npm install --omit=dev && npm i typescript
+
+
+FROM base as prerelese
+COPY --from=install /temp/prod/node_modules node_modules
+COPY . .
+
+ENV NODE_ENV=production
+RUN npm run build
+
+
+FROM base as relese
+COPY --from=install /temp/prod/node_modules node_modules
+COPY --from=prerelese /usr/src/app/dist/ ./dist
+RUN npm install -g serve
+
+EXPOSE 3000
+
+CMD ["serve", "-s", "dist"]
+

@@ -32,16 +32,20 @@ export const columns: ColumnDef<TaskTableList>[] = [
         />
       </div>
     ),
-    size:20,
+    size: 20,
   },
   {
     id: "id",
     accessorKey: "id",
     header: ({ column }) => <DataTableColumnHeader column={column} title={"id"} />,
     cell({ row }) {
-      return <div className="text-start whitespace-nowrap">{getTaskId(row.getValue("id"))}</div>;
+      return (
+        <div className="text-start whitespace-nowrap">
+          {getTaskId(row.getValue("id"))}
+        </div>
+      );
     },
-    size:30,
+    size: 30,
   },
   {
     id: "label",
@@ -50,15 +54,21 @@ export const columns: ColumnDef<TaskTableList>[] = [
     cell({ row }) {
       return <Badge className="border p-1 rounded-md">{row.getValue("label")}</Badge>;
     },
-    size:30,
+    size: 30,
   },
   {
-    id:"project",
-    accessorKey:"project",
-    header:({ column }) => <DataTableColumnHeader column={column} title={"Project"} />,
-    cell({row}){
-      return <span className="whitespace-nowrap">{(row.getValue('project') as any).name}</span>
-    }
+    id: "project",
+    accessorKey: "project",
+    header: ({ column }) => <DataTableColumnHeader column={column} title={"Project"} />,
+    cell({ row }) {
+      return (
+        <span className="whitespace-nowrap">{(row.getValue("project") as any).name}</span>
+      );
+    },
+    filterFn: (row, id, value) => {
+      const data: any = row.getValue(id);
+      return value.includes(data.id.toString());
+    },
   },
   {
     id: "title",
@@ -84,9 +94,8 @@ export const columns: ColumnDef<TaskTableList>[] = [
     },
     enableResizing: true,
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
+      return value.includes(row.getValue(id));
     },
-    
   },
   {
     id: "priority",
@@ -108,7 +117,7 @@ export const columns: ColumnDef<TaskTableList>[] = [
     },
     enableResizing: true,
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
+      return value.includes(row.getValue(id));
     },
   },
   {
@@ -117,6 +126,6 @@ export const columns: ColumnDef<TaskTableList>[] = [
       const task = row.original;
       return <TableAction task={task} />;
     },
-    size:20,
+    size: 20,
   },
 ];

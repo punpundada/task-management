@@ -14,6 +14,7 @@ import {
   StopwatchIcon,
 } from "@radix-ui/react-icons";
 import { DataTableViewOptions } from "./DataTableViewOptions";
+import { useProjectsList } from "@/hooks/useProjectList";
 
 export const labels = [
   {
@@ -82,6 +83,7 @@ interface DataTableToolbarProps<TData> {
 
 export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
+  const projectList = useProjectsList();
 
   return (
     <div className="flex items-center justify-between">
@@ -95,20 +97,27 @@ export function DataTableToolbar<TData>({ table }: DataTableToolbarProps<TData>)
           className="h-8 w-full  md:w-[200px] lg:w-[250px]"
         />
         <div className="flex gap-4 md:gap-[7px] flex-1">
-        {table.getColumn("status") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("status")}
-            title="Status"
-            options={statuses}
-          />
-        )}
-        {table.getColumn("priority") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("priority")}
-            title="Priority"
-            options={priorities}
-          />
-        )}
+          {table.getColumn("status") && (
+            <DataTableFacetedFilter
+              column={table.getColumn("status")}
+              title="Status"
+              options={statuses}
+            />
+          )}
+          {table.getColumn("priority") && (
+            <DataTableFacetedFilter
+              column={table.getColumn("priority")}
+              title="Priority"
+              options={priorities}
+            />
+          )}
+          {table.getColumn("project") && (
+            <DataTableFacetedFilter
+              column={table.getColumn("project")}
+              title="Project"
+              options={projectList}
+            />
+          )}
         </div>
         {isFiltered && (
           <Button

@@ -13,6 +13,7 @@ import { Form } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import { useProjectsList } from "@/hooks/useProjectList";
 import TaskService from "@/services/taskService";
+import useTaskStore from "@/store/taskStore";
 import { taskSInsertchema, TaskType } from "@/types/task";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
@@ -73,8 +74,10 @@ const status = [
 ];
 
 const TaskForm = () => {
+  const addNewTask = useTaskStore((s) => s.addNewTask);
+  const updateTask = useTaskStore((s) => s.updateTask);
   const { id } = useParams();
-  const projectList  = useProjectsList();
+  const projectList = useProjectsList();
   const { toast } = useToast();
   const navigate = useNavigate();
   const form = useForm<TaskType>({
@@ -83,10 +86,10 @@ const TaskForm = () => {
     defaultValues: {
       label: "",
       priority: "",
-      status: "",
+      status: "TODO",
       title: "",
       description: "",
-      projectId:"",
+      projectId: "",
     } as any,
   });
 
@@ -95,7 +98,22 @@ const TaskForm = () => {
       const updateRes = await TaskService.updateTask(data);
       if (updateRes.isSuccess) {
         toast({ title: "Success", description: updateRes.message });
-        form.reset()
+        form.reset();
+        updateTask(+id, {
+          id: updateRes.result.id,
+          label: updateRes.result.label,
+          priority: updateRes.result.priority,
+          project: {
+            id: data.projectId,
+            name:
+              projectList.find(
+                (x) => x.value.toString() === data.projectId.toString()
+              )?.label ?? "",
+          },
+          projectId: data.projectId,
+          status: updateRes.result.status,
+          title: updateRes.result.title,
+        });
       } else {
         toast({
           title: "Error occured while saving task",
@@ -103,12 +121,28 @@ const TaskForm = () => {
           variant: "destructive",
         });
       }
+
       return;
     }
     const savedTask = await TaskService.saveTask(data);
     if (savedTask.isSuccess) {
+      addNewTask({
+        id: savedTask.result.id,
+        label: savedTask.result.label,
+        priority: savedTask.result.priority,
+        project: {
+          id: data.projectId,
+          name:
+            projectList.find(
+              (x) => x.value.toString() === data.projectId.toString()
+            )?.label ?? "",
+        },
+        projectId: data.projectId,
+        status: savedTask.result.status,
+        title: savedTask.result.title,
+      });
       toast({ title: "Success", description: savedTask.message });
-      form.reset()
+      form.reset();
     } else {
       toast({
         title: "Error occured while saving task",
@@ -123,15 +157,15 @@ const TaskForm = () => {
     const fetchTask = async () => {
       const response = await TaskService.getTask(+id);
       if (!response?.isSuccess) return;
-      console.log(response.result.projectId)
+      console.log(response.result.projectId);
       form.setValue("label", response.result.label);
       form.setValue("priority", response.result.priority);
       form.setValue("status", response.result.status);
       form.setValue("title", response.result.title);
       form.setValue("userId", response.result.userId);
       form.setValue("id", response.result.id);
-      form.setValue("description",response.result.description)
-      form.setValue("projectId",response.result.projectId.toString() as any);
+      form.setValue("description", response.result.description);
+      form.setValue("projectId", response.result.projectId.toString() as any);
     };
     fetchTask();
   }, [id, form]);
@@ -139,8 +173,14 @@ const TaskForm = () => {
     <div className="">
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">{id ? "Edit Task" :"New Task."}</CardTitle>
-          <CardDescription className="text-base">{id ? `Edit task with id: ${form.getValues('id')}` :"Add a new task"}</CardDescription>
+          <CardTitle className="text-2xl font-bold">
+            {id ? "Edit Task" : "New Task."}
+          </CardTitle>
+          <CardDescription className="text-base">
+            {id
+              ? `Edit task with id: ${form.getValues("id")}`
+              : "Add a new task"}
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -167,7 +207,12 @@ const TaskForm = () => {
                   className="h-24"
                 />
               </div>
-              <Combobox name="label" options={label} label="Label" placeHolder="Label" />
+              <Combobox
+                name="label"
+                options={label}
+                label="Label"
+                placeHolder="Label"
+              />
               <Combobox
                 name="priority"
                 options={priority}
@@ -183,7 +228,11 @@ const TaskForm = () => {
 
               <div className="flex gap-4 justify-end col-span-full">
                 <Button type="submit">Save</Button>
-                <Button type="button" onClick={() => navigate("..")} variant={"outline"}>
+                <Button
+                  type="button"
+                  onClick={() => navigate("..")}
+                  variant={"outline"}
+                >
                   Back
                 </Button>
               </div>
