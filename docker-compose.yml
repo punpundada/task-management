@@ -1,0 +1,26 @@
+services:
+  bun-server:
+    env_file:
+      - backend/.env
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    ports:
+      - "9009:9009"
+    volumes:
+      - ./task-management/server:/app
+  
+  frontend:
+    env_file:
+      - frontend/.env
+    build: 
+      context: ./frontend
+      dockerfile: dockerfile
+    ports:
+      - "4353:3000"
+    volumes:
+      - ./task-management/react:/app
+
+# volumes:
+#   - ./task-management/react:
+#   - ./task-management/server:

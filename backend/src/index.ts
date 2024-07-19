@@ -39,7 +39,7 @@ const allowedOrions = ["http://localhost:5173", "http://localhost:5174", "http:/
 //   optionsSuccessStatus: 204,
 // };
 
-app.use(cors({credentials:true,origin:"http://localhost:5173"}));
+app.use(cors({credentials:true,origin:["http://localhost:4353","http://localhost:5173"]}));
 // app.use(cors());
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
