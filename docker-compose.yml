@@ -5,8 +5,8 @@ services:
     build:
       context: ./backend
       dockerfile: dockerfile
-    ports:
-      - "9009:9009"
+    # ports:
+    #   - "9009:9009"
     volumes:
       - ./task-management/server:/app
     networks:
@@ -18,8 +18,8 @@ services:
     build: 
       context: ./frontend
       dockerfile: dockerfile
-    ports:
-      - "4353:3000"
+    # ports:
+    #   - "4353:3000"
     volumes:
       - ./task-management/react:/app
     networks:

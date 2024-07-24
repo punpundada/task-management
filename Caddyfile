@@ -4,7 +4,7 @@
 
 http://localhost:9000 {
     route /api/* {
-        reverse_proxy http://host.docker.internal:9009
+        reverse_proxy http://bun-server:9009
     }
 
     route * {

@@ -30,8 +30,15 @@ const envarSchema = z.object({
   SMTP_PASS: z.string({
     required_error: "SMTP_PASS is missing from envrironment variables",
   }),
-  EMAIL_FROM:z.string({required_error:"EMAIL_FROM is missing from envrironment variables"}),
-  FRONT_END_BASE_URL:z.string({required_error:"FRONT_END_BASE_URL is missing from envrironment variables"})
+  EMAIL_FROM: z.string({
+    required_error: "EMAIL_FROM is missing from envrironment variables",
+  }),
+  FRONT_END_BASE_URL: z.string({
+    required_error: "FRONT_END_BASE_URL is missing from envrironment variables",
+  }),
+  ALLOWED_ORIGINS: z
+    .string({ required_error: "ALLOWED_ORIGINS is missing from environment variables" })
+    .transform((x) => x.split(",").map(x=>x.trim())),
 });
 
 export type EnvSchema = z.infer<typeof envarSchema>;
