@@ -3,7 +3,7 @@ import type { TaskInsert, TaskSelect } from "../types/task";
 import type { Res } from "../types/Res";
 import { STATUS_CODES, getUserOrError } from "../utils/lib";
 import { z } from "zod";
-import TasksService from "@/service/taskService";
+import TasksService from "../service/taskService";
 
 class TaskController {
   static async addTask(

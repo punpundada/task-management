@@ -4,7 +4,8 @@ import z from 'zod';
 
 export const projectInsertSchema = createInsertSchema(projectTable,{
     name:z.string({required_error:"Project name is required"}),
-    userId:z.string({required_error:"User id is required"})
+    userId:z.string({required_error:"User id is required"}),
+    
 })
 
 export const projectSelectScema = createSelectSchema(projectTable,{
