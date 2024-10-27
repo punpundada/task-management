@@ -6,6 +6,7 @@ import { useAuthContext } from "./context/AuthContext";
 import { User } from "./types/user";
 import ProtectedRoute from "./pages/common/ProtectedRoute";
 import { Toaster } from "./components/ui/toaster";
+import Dashboard from "./pages/dashboard/Dashboard";
 
 const Profile = React.lazy(()=>import("@/pages/user/Profile"));
 const Signup = React.lazy(()=>import('./pages/auth/Signup'))
@@ -26,14 +27,20 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
+        element: <Suspense fallback={<>...Loading</>}><Dashboard /></Suspense>,
+        // element: <Suspense fallback={<>...Loading</>}><TaskList /></Suspense>,
+      },
+      {
+        // index: true,
+        path:"tasks",
         element: <Suspense fallback={<>...Loading</>}><TaskList /></Suspense>,
       },
       {
-        path: "add",
+        path: "tasks/add",
         element: <Suspense fallback={<>...Loading</>}><TaskForm /></Suspense>,
       },
       {
-        path: "edit/:id",
+        path: "tasks/edit/:id",
         element: <Suspense fallback={<>...Loading</>}><TaskForm /></Suspense>,
       },
       {

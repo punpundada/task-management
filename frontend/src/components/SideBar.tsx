@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
-import { CirclePlus, ListOrdered } from "lucide-react";
+import { CirclePlus, LayoutDashboard, ListOrdered } from "lucide-react";
 import SettingMenu from "./SettingMenu";
 
 
@@ -15,6 +15,16 @@ const SideBar = () => {
           <Tooltip>
             <TooltipTrigger>
               <Button variant={"ghost"} size={"icon"} onClick={() => navigate("/")}>
+                <LayoutDashboard strokeWidth={1} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent sideOffset={7} side="right">
+              <p>Dashboard</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger>
+              <Button variant={"ghost"} size={"icon"} onClick={() => navigate("/tasks")}>
                 <ListOrdered strokeWidth={1} />
               </Button>
             </TooltipTrigger>
@@ -25,7 +35,7 @@ const SideBar = () => {
 
           <Tooltip>
             <TooltipTrigger>
-              <Button variant={"ghost"} size={"icon"} onClick={() => navigate("/add")}>
+              <Button variant={"ghost"} size={"icon"} onClick={() => navigate("/tasks/add")}>
                 <CirclePlus strokeWidth={1}  />
               </Button>
             </TooltipTrigger>
