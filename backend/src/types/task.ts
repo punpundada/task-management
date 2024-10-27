@@ -12,11 +12,25 @@ export const taskInsertSchema = createInsertSchema(task, {
   status: z.enum(["BACKLOG", "TODO", "INPROGRESS", "DONE", "CANCLED"], {
     required_error: "Status is required",
   }),
-  description:z.string({required_error:"Description is a required filed"}),
-  projectId:z.number({required_error:"Project id is required filed"}),
+  description: z.string({ required_error: "Description is a required filed" }),
+  projectId: z.number({ required_error: "Project id is required filed" }),
+  createdDate: z
+    .date()
+    .refine((x) => new Date(x))
+    .default(new Date()),
 });
 
 export const tasksSelectSchema = createSelectSchema(task);
 
 export type TaskInsert = z.infer<typeof taskInsertSchema>;
 export type TaskSelect = z.infer<typeof tasksSelectSchema>;
+
+export const statusSchema =  z.enum(["BACKLOG", "TODO", "INPROGRESS", "DONE", "CANCLED"]);
+
+export type StatusType = z.infer<typeof statusSchema>;
+
+
+export type TaskPieChartDataType = {
+  status:StatusType;
+  count: number;
+}[]

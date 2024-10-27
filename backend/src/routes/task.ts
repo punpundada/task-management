@@ -1,13 +1,23 @@
 import { Router } from "express";
 import TaskController from "../controller/task";
+import TasksService from "../service/taskService";
+import db from "../db";
 
 const taskRouter = Router();
 
-taskRouter.post('/add',TaskController.addTask)
-taskRouter.get('/get',TaskController.getTasks)
-taskRouter.get('/get-table-list',TaskController.getTableList)
-taskRouter.get('/get/:id',TaskController.getTask)
-taskRouter.post('/update/:id',TaskController.updateTask)
-taskRouter.delete('/delete/:id',TaskController.deleteTask)
+const service = new TasksService(db);
+const controller = new TaskController(service);
 
-export default taskRouter
+taskRouter.post("/add", controller.addTask.bind(controller));
+taskRouter.get("/get", controller.getTasks.bind(controller));
+taskRouter.get("/get-table-list", controller.getTableList.bind(controller));
+taskRouter.get("/get/:id", controller.getTask.bind(controller));
+taskRouter.post("/update/:id", controller.updateTask.bind(controller));
+taskRouter.delete("/delete/:id", controller.deleteTask.bind(controller));
+taskRouter.post("/piechart", controller.getPieChartData.bind(controller));
+
+export default taskRouter;
+
+
+const dd = new Date()
+dd.toISOString

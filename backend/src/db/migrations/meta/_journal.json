@@ -36,6 +36,13 @@
       "when": 1729350086437,
       "tag": "0004_wild_shiver_man",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1729416932989,
+      "tag": "0005_slim_tinkerer",
+      "breakpoints": true
     }
   ]
 }
