@@ -8,8 +8,8 @@ import {
 } from "@/components/ui/table";
 import useCalanderData from "@/hooks/dashboard/useCalanderData";
 import { cn } from "@/lib/utils";
-import { CalanderDataType } from "@/types/task";
 import { getDate } from "date-fns";
+import CalanderCell from "./CalanderCell";
 
 function getCalendarDates(year: number, month: number): (Date | null)[][] {
   const dates: (Date | null)[][] = [];
@@ -70,11 +70,11 @@ const DashboardCalander = () => {
                 <TableCell
                   key={dayIndex}
                   className={cn(
-                    "h-14 w-[calc(100%/7)]",
+                    "h-14 w-[calc(100%/7)] hover:bg-slate-400 rounded-sm",
                     dayIndex % 2 === 0 ? "bg-slate-200" : "bg-slate-300"
                   )}
                 >
-                  <Cell
+                  <CalanderCell
                     date={date}
                     taskList={
                       date ? dateList[getDate(date).toString()] : undefined
@@ -91,40 +91,3 @@ const DashboardCalander = () => {
 };
 
 export default DashboardCalander;
-
-type CellProps = {
-  date: Date | null;
-  taskList?: CalanderDataType[];
-};
-
-function Cell({ date, taskList }: CellProps) {
-  // const [searchParams] = useSearchParams()
-  // const isCalanderPopupOpen = Boolean(searchParams.get("isCalanderPopupOpen")??false)
-  if (!date) {
-    return null;
-  }
-  // const sameDay = !!data?.date && isSameDay(date, data?.date);
-
-  return (
-    <div className="relative">
-      {currentDate.getDate() === date.getDate() && (
-        <div className="size-3 rounded-full bg-blue-800 absolute -top-3 right-0"></div>
-      )}
-      <div className="flex justify-center flex-col gap-1">
-        {taskList?.map((task) => (
-          <div
-            className={cn("w-2/3 rounded-xl h-1", {
-              "bg-[hsl(var(--chart-1))]": task.status === "BACKLOG",
-              "bg-[hsl(var(--chart-2))]": task.status === "TODO",
-              "bg-[hsl(var(--chart-3))]": task.status === "INPROGRESS",
-              "bg-[hsl(var(--chart-4))]": task.status === "DONE",
-              "bg-[hsl(var(--chart-5))]": task.status === "CANCLED",
-            })}
-            key={task.id}
-          />
-        ))}
-      </div>
-      <span className="absolute top-0 right-0 mr-[1px]">{date.getDate()}</span>
-    </div>
-  );
-}

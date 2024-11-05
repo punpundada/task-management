@@ -30,9 +30,21 @@ export const getTaskId = (taskId: number) => {
   return id;
 };
 
-
-export function toCapitalCase(str:string) {
-  return str.split(' ').map(word => {
-    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-  }).join(' ');
+export function toCapitalCase(str: string) {
+  return str
+    .split(" ")
+    .map((word) => {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(" ");
 }
+
+export const jsonToBase64 = (obj: unknown) => {
+  const jsonString = JSON.stringify(obj);
+  return btoa(jsonString);
+};
+
+export const base64ToJson = (base64String: string) => {
+  const jsonString = atob(base64String);
+  return JSON.parse(jsonString);
+};
