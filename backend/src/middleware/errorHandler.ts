@@ -10,11 +10,7 @@ export default function (
   res: Response<Res<any>>,
   next: NextFunction
 ) {
-  console.error("Error:", {
-    message: error.message,
-    stack: error.stack,
-    name: error.name
-  });
+  console.error("Error:", error);
   
   if (error instanceof CustomError){
     return res.status(error.code).json({
@@ -33,6 +29,7 @@ export default function (
   }
 
   if (error instanceof ZodError) {
+    console.log(error.issues);
     return res.status(STATUS_CODES.BAD_REQUEST).json({
       isSuccess: false,
       issues: error.issues,

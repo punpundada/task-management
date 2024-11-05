@@ -17,7 +17,23 @@ export const taskInsertSchema = createInsertSchema(task, {
   createdDate: z
     .date()
     .refine((x) => new Date(x))
-    .default(new Date()),
+    .default(new Date())
+    .optional(),
+  todoDate: z
+    .date()
+    .optional().nullable(),
+  backlogDate: z
+    .date()
+    .optional().nullable(),
+  inprogressDate: z
+    .date()
+    .optional().nullable(),
+  doneDate: z
+    .date()
+    .optional().nullable(),
+  cancledDate: z
+    .date()
+    .optional().nullable(),
 });
 
 export const tasksSelectSchema = createSelectSchema(task);
@@ -25,12 +41,26 @@ export const tasksSelectSchema = createSelectSchema(task);
 export type TaskInsert = z.infer<typeof taskInsertSchema>;
 export type TaskSelect = z.infer<typeof tasksSelectSchema>;
 
-export const statusSchema =  z.enum(["BACKLOG", "TODO", "INPROGRESS", "DONE", "CANCLED"]);
+export const statusSchema = z.enum([
+  "BACKLOG",
+  "TODO",
+  "INPROGRESS",
+  "DONE",
+  "CANCLED",
+]);
 
 export type StatusType = z.infer<typeof statusSchema>;
 
-
 export type TaskPieChartDataType = {
-  status:StatusType;
+  status: StatusType;
   count: number;
-}[]
+}[];
+
+export const caladerTaskDataSchema = z.object({
+  date: z.date(),
+  title: z.string(),
+  status: statusSchema,
+  id:z.number(),
+});
+
+export type TaskCalanderDataType = z.infer<typeof caladerTaskDataSchema>;

@@ -1,5 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
 import type {
+  TaskCalanderDataType,
   TaskInsert,
   TaskPieChartDataType,
   TaskSelect,
@@ -8,7 +9,7 @@ import type { Res } from "../types/Res";
 import { CustomError, STATUS_CODES, getUserOrError } from "../utils/lib";
 import { z } from "zod";
 import type TasksService from "../service/taskService";
-
+import { isValid } from "date-fns";
 class TaskController {
   private service: TasksService;
   constructor(service: TasksService) {
@@ -22,7 +23,8 @@ class TaskController {
   ) {
     try {
       req.body.userId = getUserOrError(res.locals).user.id;
-
+      req.body.createdDate = new Date();
+      req.body.todoDate = new Date();
       const task = await this.service.saveTasks(req.body);
       return res.status(STATUS_CODES.OK).json({
         isSuccess: true,
@@ -78,7 +80,6 @@ class TaskController {
           message: "Task id do not match",
         });
       }
-      console.log("validId", validId);
 
       const savedTask = await this.service.updateTaskById(req.body);
       return res.status(STATUS_CODES.OK).json({
@@ -186,6 +187,27 @@ class TaskController {
       next(error);
     }
   }
+
+  getCalanderData = async (
+    req: Request<{ date: Date }, unknown, unknown>,
+    res: Response<Res<TaskCalanderDataType[]>>,
+    next: NextFunction
+  ) => {
+    try {
+      const valid = isValid(new Date(req.params.date));
+      if (!valid) {
+        throw new CustomError("Invalid Date", STATUS_CODES.BAD_REQUEST);
+      }
+      const data = await this.service.getCalanderData(req.params.date);
+      return res.status(STATUS_CODES.OK).json({
+        isSuccess: true,
+        message: "Request was successful",
+        result: data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
 }
 
 export default TaskController;

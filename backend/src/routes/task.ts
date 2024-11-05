@@ -15,9 +15,6 @@ taskRouter.get("/get/:id", controller.getTask.bind(controller));
 taskRouter.post("/update/:id", controller.updateTask.bind(controller));
 taskRouter.delete("/delete/:id", controller.deleteTask.bind(controller));
 taskRouter.post("/piechart", controller.getPieChartData.bind(controller));
+taskRouter.get("/calander/:date", controller.getCalanderData.bind(controller));
 
 export default taskRouter;
-
-
-const dd = new Date()
-dd.toISOString

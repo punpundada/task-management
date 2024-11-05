@@ -1,15 +1,18 @@
-import { and, count, desc, eq, gte, lte, ne } from "drizzle-orm";
+import { and, count, desc, eq, gte, lte, ne, not, sql } from "drizzle-orm";
 import { task } from "../db/schema";
 import {
   taskInsertSchema,
   tasksSelectSchema,
   type StatusType,
+  type TaskCalanderDataType,
   type TaskInsert,
   type TaskPieChartDataType,
   type TaskSelect,
 } from "../types/task";
 import { undefined, z } from "zod";
 import type { db } from "../db";
+import { lastDayOfMonth, startOfMonth, getDate } from "date-fns";
+import { CustomError, STATUS_CODES } from "../utils/lib";
 
 class TasksService {
   db: db;
@@ -55,8 +58,41 @@ class TasksService {
       .where(getFilter())
       .orderBy(desc(task.id));
   }
+
   async updateTaskById(taskToUpdate: TaskSelect) {
+    if (!taskToUpdate.createdDate) {
+      taskToUpdate.createdDate = new Date();
+    }
+
+    const savedTask = await this.db.query.task.findFirst({
+      where: eq(task.id, taskToUpdate.id),
+    });
+    if (!savedTask) {
+      throw new CustomError("Task not found", STATUS_CODES.BAD_REQUEST);
+    }
+    console.log(savedTask);
+    taskToUpdate = { ...savedTask, ...taskToUpdate };
     const validTask = tasksSelectSchema.parse(taskToUpdate);
+    switch (validTask.status) {
+      case "TODO":
+        validTask.todoDate = new Date();
+        break;
+      case "BACKLOG":
+        validTask.backlogDate = new Date();
+        break;
+      case "CANCLED":
+        validTask.cancledDate = new Date();
+        break;
+      case "DONE":
+        validTask.doneDate = new Date();
+        break;
+      case "INPROGRESS":
+        validTask.inprogressDate = new Date();
+        break;
+      default:
+        break;
+    }
+
     return await this.db
       .update(task)
       .set(validTask)
@@ -100,7 +136,6 @@ class TasksService {
     fromDate: Date,
     toDate: Date
   ): Promise<TaskPieChartDataType> {
-
     const countData = await this.db
       .select({ status: task.status, count: count() })
       .from(task)
@@ -108,11 +143,77 @@ class TasksService {
       .where(
         and(
           gte(task.createdDate, new Date(fromDate)),
-          lte(task.createdDate, new Date(toDate)),
+          lte(task.createdDate, new Date(toDate))
         )
       );
     return countData as TaskPieChartDataType;
   }
+
+  getCalanderData = async (date: Date) => {
+    const firstDateOfMonth = startOfMonth(date);
+    const lastDateOfMonth = lastDayOfMonth(date);
+    const data = await this.db.query.task.findMany({
+      where: and(
+        gte(task.createdDate, firstDateOfMonth),
+        lte(task.createdDate, lastDateOfMonth)
+      ),
+      columns: {
+        title: true,
+        createdDate: true,
+        id: true,
+        status: true,
+        todoDate: true,
+        backlogDate: true,
+        cancledDate: true,
+        doneDate: true,
+        inprogressDate: true,
+      },
+    });
+
+    const result = data.map<TaskCalanderDataType>((item) => {
+      let date: Date | null = new Date();
+
+      switch (item.status) {
+        case "TODO":
+          date = item.todoDate;
+          break;
+        case "BACKLOG":
+          date = item.backlogDate;
+          break;
+        case "CANCLED":
+          date = item.cancledDate;
+          break;
+        case "DONE":
+          date = item.doneDate;
+          break;
+        case "INPROGRESS":
+          date = item.inprogressDate;
+          break;
+        default:
+          break;
+      }
+
+      return {
+        date: date,
+        id: item.id,
+        status: item.status as StatusType,
+        title: item.title,
+      } as TaskCalanderDataType;
+    });
+
+    const res: Record<string, [TaskCalanderDataType]> = {};
+
+    result.forEach((item) => {
+      const date = getDate(item.date).toString();
+      console.log(date);
+      if (!res[date]) {
+        res[date] = [] as any;
+      }
+      res[date].push(item);
+    });
+
+    return res;
+  };
 }
 
 export default TasksService;

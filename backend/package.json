@@ -25,6 +25,7 @@
     "@libsql/win32-x64-msvc": "^0.4.6",
     "@lucia-auth/adapter-drizzle": "^1.0.7",
     "cors": "^2.8.5",
+    "date-fns": "^4.1.0",
     "drizzle-orm": "^0.31.2",
     "drizzle-zod": "^0.5.1",
     "express": "^4.19.2",
