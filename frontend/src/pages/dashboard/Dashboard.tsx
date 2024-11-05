@@ -1,4 +1,4 @@
-import DashboardCalander from "./dashboard_calander"
+import DashboardCalander from "./calander/dashboard_calander"
 import { DatePickerWithRange } from "./DateRange"
 import TasksPieChart from "./TasksPieChart"
 
@@ -9,7 +9,7 @@ const Dashboard = () => {
           <span className="text-2xl font-bold">Dashboard</span>
             <DatePickerWithRange />
         </div>
-        <div className="w-full h-1/2 grid grid-cols-[.35fr_.75fr] gap-8">
+        <div className="w-full h-1/2 grid grid-cols-1 md:grid-cols-[.35fr_.75fr] gap-8">
           <div>
             <TasksPieChart />
           </div>
@@ -17,7 +17,7 @@ const Dashboard = () => {
             <DashboardCalander />
           </div>
         </div>
-        <div className="w-full h-1/2 grid grid-cols-[.75fr_.53fr] gap-8">
+        <div className="w-full h-1/2 grid grid-cols-1 md:grid-cols-[.75fr_.53fr] gap-8">
           <div>
             priority
           </div>

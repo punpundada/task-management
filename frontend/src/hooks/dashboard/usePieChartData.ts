@@ -12,9 +12,6 @@ const usePieChartData = (fromDate: string | null, toDate: string | null) => {
       if (!fromDate || !toDate) {
         return;
       }
-      console.log("fromDate",fromDate);
-      console.log("toDate",toDate);
-      
       
       setLoadingPieChart(true);
       const monthPriviousDate = new Date();

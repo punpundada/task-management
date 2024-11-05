@@ -87,3 +87,10 @@ export type PieChartData = {
   count: number;
   fill: string;
 };
+
+export type CalanderDataType = {
+  date: Date | null;
+  id: number;
+  status: StatusType;
+  title: string;
+};

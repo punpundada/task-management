@@ -1,6 +1,7 @@
 import { axiosInstance } from "@/lib/constants";
 import { errorResponse } from "@/lib/utils";
 import {
+  CalanderDataType,
   TaskInsetType,
   TaskPieChartApi,
   TaskTableList,
@@ -95,6 +96,18 @@ export default class TaskService {
       return response.data;
     } catch (error) {
       console.error(error);
+      return errorResponse(error);
     }
   }
+  static getCalanderData = async (date: Date) => {
+    try {
+      const response = await axiosInstance.get<GenericRes<Record<string, [CalanderDataType]>>>(
+        `/tasks/calander/${date.toISOString()}`
+      );
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      return errorResponse(error);
+    }
+  };
 }
