@@ -19,15 +19,17 @@ class TasksService {
   constructor(db: db) {
     this.db = db;
   }
+
   async saveTasks(taskToSave: TaskInsert) {
     const validTask = taskInsertSchema.parse(taskToSave);
     validTask.createdDate = new Date();
     return await this.db.insert(task).values(validTask).returning();
   }
+
   async getTasks(
     userId: string,
-    fromDate: Date | undefined,
-    toDate: Date | undefined
+    fromDate?: Date | undefined,
+    toDate?: Date | undefined
   ) {
     const getFilter = () => {
       if (fromDate && !toDate) {
@@ -70,24 +72,28 @@ class TasksService {
     if (!savedTask) {
       throw new CustomError("Task not found", STATUS_CODES.BAD_REQUEST);
     }
-    console.log(savedTask);
     taskToUpdate = { ...savedTask, ...taskToUpdate };
     const validTask = tasksSelectSchema.parse(taskToUpdate);
     switch (validTask.status) {
       case "TODO":
+        if(savedTask.status != 'TODO')
         validTask.todoDate = new Date();
         break;
       case "BACKLOG":
+        if(savedTask.status != 'BACKLOG')
         validTask.backlogDate = new Date();
         break;
       case "CANCLED":
-        validTask.cancledDate = new Date();
+        if(savedTask.status != 'CANCLED')
+          validTask.cancledDate = new Date();
         break;
       case "DONE":
-        validTask.doneDate = new Date();
+        if(savedTask.status != 'DONE')
+          validTask.doneDate = new Date();
         break;
       case "INPROGRESS":
-        validTask.inprogressDate = new Date();
+        if(savedTask.status != 'INPROGRESS')
+          validTask.inprogressDate = new Date();
         break;
       default:
         break;
@@ -170,7 +176,9 @@ class TasksService {
       },
     });
 
-    const result = data.map<TaskCalanderDataType>((item) => {
+    const res: Record<string, [TaskCalanderDataType]> = {};
+
+    data.forEach((item) => {
       let date: Date | null = new Date();
 
       switch (item.status) {
@@ -193,23 +201,18 @@ class TasksService {
           break;
       }
 
-      return {
-        date: date,
-        id: item.id,
-        status: item.status as StatusType,
-        title: item.title,
-      } as TaskCalanderDataType;
-    });
-
-    const res: Record<string, [TaskCalanderDataType]> = {};
-
-    result.forEach((item) => {
-      const date = getDate(item.date).toString();
-      console.log(date);
-      if (!res[date]) {
-        res[date] = [] as any;
+      if (date) {
+        const day = getDate(date).toString();
+        if (!res[day]) {
+          res[day] = [] as any;
+        }
+        res[day].push({
+          date: date,
+          id: item.id,
+          status: item.status as StatusType,
+          title: item.title,
+        } as TaskCalanderDataType);
       }
-      res[date].push(item);
     });
 
     return res;

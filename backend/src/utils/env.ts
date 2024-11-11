@@ -1,6 +1,6 @@
 import z, { ZodError } from "zod";
 
-const nodeEnv = z.enum(["production", "development"], {
+const nodeEnv = z.enum(["production", "development","test"], {
   required_error: "NODE_ENV is missing from envrironment variables",
 });
 

@@ -29,7 +29,7 @@ export default function (
   }
 
   if (error instanceof ZodError) {
-    console.log(error.issues);
+    console.error(error.issues);
     return res.status(STATUS_CODES.BAD_REQUEST).json({
       isSuccess: false,
       issues: error.issues,

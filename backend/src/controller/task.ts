@@ -48,7 +48,6 @@ class TaskController {
   ) {
     try {
       const userId = getUserOrError(res.locals).user.id;
-      console.log("req.params", req.query);
 
       const taskList = await this.service.getTasks(
         userId,
@@ -190,7 +189,7 @@ class TaskController {
 
   getCalanderData = async (
     req: Request<{ date: Date }, unknown, unknown>,
-    res: Response<Res<TaskCalanderDataType[]>>,
+    res: Response<Res<Record<string, [TaskCalanderDataType]>>>,
     next: NextFunction
   ) => {
     try {

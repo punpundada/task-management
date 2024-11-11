@@ -47,13 +47,11 @@ class AuthController {
       const { savedUser, sessionCookie } = await AuthService.saveUser(
         validUser
       );
-      console.log('savedUser',savedUser)
       const verificationCode =
         await EmailVerificationService.generateEmailVerificationCode(
           savedUser[0].id,
           savedUser[0].email
         );
-      console.log('verificationCode',verificationCode)
 
       const emailSend = await transporter.sendMail({
         from: env.EMAIL_FROM,
@@ -65,8 +63,7 @@ class AuthController {
           validFor: "15 mins",
         }),
       });
-      console.log('emailSend',emailSend);
-      
+
       res.set("Location", "/");
       res.set("Set-Cookie", sessionCookie.serialize());
       return res.status(STATUS_CODES.CREATED).json({
@@ -160,7 +157,7 @@ class AuthController {
       await lucia.invalidateUserSessions(user.id);
       user.email_verified = true;
       const updatedUser = UserService.updateUser(user as any);
-      res.clearCookie("session")
+      res.clearCookie("session");
       return res.status(STATUS_CODES.OK).json({
         isSuccess: true,
         message: "User verified successfully",
@@ -266,7 +263,7 @@ class AuthController {
     try {
       const { session } = getUserOrError(res.locals);
       await lucia.invalidateSession(session.id);
-      res.clearCookie('session')
+      res.clearCookie("session");
       return res.status(STATUS_CODES.OK).json({
         isSuccess: true,
         message: "User logged out successfully",
@@ -285,7 +282,7 @@ class AuthController {
     try {
       const { user } = getUserOrError(res.locals);
       await lucia.invalidateUserSessions(user.id);
-      res.clearCookie('session')
+      res.clearCookie("session");
       return res.status(STATUS_CODES.OK).json({
         isSuccess: true,
         message: "Logged out from all devices",
@@ -351,7 +348,6 @@ class AuthController {
         message: "Email send successfully",
         result: true,
       });
-      
     } catch (error) {
       next(error);
     }
