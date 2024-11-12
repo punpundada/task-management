@@ -10,6 +10,12 @@ import useCalanderData from "@/hooks/dashboard/useCalanderData";
 import { cn } from "@/lib/utils";
 import { getDate } from "date-fns";
 import CalanderCell from "./CalanderCell";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 function getCalendarDates(year: number, month: number): (Date | null)[][] {
   const dates: (Date | null)[][] = [];
@@ -47,45 +53,52 @@ const DashboardCalander = () => {
 
   return (
     <>
-      <Table className="rounded-lg border p-6">
-        <TableHeader>
-          <TableRow>
-            {days.map((x, index) => (
-              <TableHead
-                key={x}
-                className={cn(
-                  "text-primary",
-                  index % 2 === 0 ? "bg-slate-200" : "bg-slate-300"
-                )}
-              >
-                {x}
-              </TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {calanderDates.map((week, index) => (
-            <TableRow key={index}>
-              {week.map((date, dayIndex) => (
-                <TableCell
-                  key={dayIndex}
-                  className={cn(
-                    "h-14 w-[calc(100%/7)] hover:bg-slate-400 rounded-sm",
-                    dayIndex % 2 === 0 ? "bg-slate-200" : "bg-slate-300"
-                  )}
-                >
-                  <CalanderCell
-                    date={date}
-                    taskList={
-                      date ? dateList[getDate(date).toString()] : undefined
-                    }
-                  />
-                </TableCell>
+      <Card className="h-full">
+        <CardHeader>
+          <CardTitle>Calander</CardTitle>
+        </CardHeader>
+        <CardContent className="flex h-5/6 justify-center items-center">
+          <Table className="rounded-lg border">
+            <TableHeader>
+              <TableRow>
+                {days.map((x, index) => (
+                  <TableHead
+                    key={x}
+                    className={cn(
+                      "text-primary",
+                      index % 2 === 0 ? "bg-slate-200" : "bg-slate-300"
+                    )}
+                  >
+                    {x}
+                  </TableHead>
+                ))}
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {calanderDates.map((week, index) => (
+                <TableRow key={index}>
+                  {week.map((date, dayIndex) => (
+                    <TableCell
+                      key={dayIndex}
+                      className={cn(
+                        "h-14 w-[calc(100%/7)] hover:bg-slate-400 rounded-sm",
+                        dayIndex % 2 === 0 ? "bg-slate-200" : "bg-slate-300"
+                      )}
+                    >
+                      <CalanderCell
+                        date={date}
+                        taskList={
+                          date ? dateList[getDate(date).toString()] : undefined
+                        }
+                      />
+                    </TableCell>
+                  ))}
+                </TableRow>
               ))}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </>
   );
 };

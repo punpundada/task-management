@@ -1,5 +1,6 @@
 import DashboardCalander from "./calander/dashboard_calander"
 import { DatePickerWithRange } from "./DateRange"
+import DoneTasksBarChart from "./DoneTasksBarChart"
 import TasksPieChart from "./TasksPieChart"
 
 const Dashboard = () => {
@@ -10,7 +11,7 @@ const Dashboard = () => {
             <DatePickerWithRange />
         </div>
         <div className="w-full h-1/2 grid grid-cols-1 md:grid-cols-[.35fr_.75fr] gap-8">
-          <div>
+          <div className="flex justify-center items-center">
             <TasksPieChart />
           </div>
           <div>
@@ -22,7 +23,7 @@ const Dashboard = () => {
             priority
           </div>
           <div>
-            badges
+            <DoneTasksBarChart />
           </div>
         </div>
     </div>
