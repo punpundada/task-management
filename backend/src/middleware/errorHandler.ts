@@ -3,6 +3,7 @@ import { CustomError, STATUS_CODES } from "../utils/lib";
 import { ZodError } from "zod";
 import type { Res } from "../types/Res";
 import { LibsqlError } from "@libsql/client";
+import lucia from "../utils/lucia";
 
 export default function (
   error: Error,
@@ -11,21 +12,27 @@ export default function (
   next: NextFunction
 ) {
   console.error("Error:", error);
-  
-  if (error instanceof CustomError){
+
+  if (error instanceof CustomError) {
+    if (error.code === STATUS_CODES.UNAUTHORIZED) {
+      res.appendHeader(
+        "Set-Cookie",
+        lucia.createBlankSessionCookie().serialize()
+      );
+    }
     return res.status(error.code).json({
-      isSuccess:false,
-      issues:[],
-      message:error.message
-    })
+      isSuccess: false,
+      issues: [],
+      message: error.message,
+    });
   }
 
-  if(error instanceof LibsqlError){
+  if (error instanceof LibsqlError) {
     return res.status(STATUS_CODES.BAD_REQUEST).json({
-      isSuccess:false,
-      issues:[],
-      message:error.message
-    })
+      isSuccess: false,
+      issues: [],
+      message: error.message,
+    });
   }
 
   if (error instanceof ZodError) {
@@ -38,8 +45,8 @@ export default function (
   }
 
   return res.status(STATUS_CODES.SERVER_ERROR).json({
-    isSuccess:false,
-    issues:[],
-    message:error.message
-  })
+    isSuccess: false,
+    issues: [],
+    message: error.message,
+  });
 }
