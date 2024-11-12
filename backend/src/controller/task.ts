@@ -6,7 +6,7 @@ import type {
   TaskSelect,
 } from "../types/task";
 import type { Res } from "../types/Res";
-import { CustomError, STATUS_CODES, getUserOrError } from "../utils/lib";
+import { CustomError, STATUS_CODES, mustReturnUserAndSession } from "../utils/lib";
 import { z } from "zod";
 import type TasksService from "../service/taskService";
 import { isValid } from "date-fns";
@@ -22,7 +22,7 @@ class TaskController {
     next: NextFunction
   ) {
     try {
-      req.body.userId = getUserOrError(res.locals).user.id;
+      req.body.userId = mustReturnUserAndSession(res.locals).user.id;
       req.body.createdDate = new Date();
       req.body.todoDate = new Date();
       const task = await this.service.saveTasks(req.body);
@@ -47,7 +47,7 @@ class TaskController {
     next: NextFunction
   ) {
     try {
-      const userId = getUserOrError(res.locals).user.id;
+      const userId = mustReturnUserAndSession(res.locals).user.id;
 
       const taskList = await this.service.getTasks(
         userId,
@@ -70,7 +70,7 @@ class TaskController {
     next: NextFunction
   ) {
     try {
-      getUserOrError(res.locals);
+      mustReturnUserAndSession(res.locals);
       const validId = z.number().parse(+req.params.id);
       if (req.body.id !== validId) {
         return res.status(STATUS_CODES.BAD_REQUEST).json({
@@ -97,7 +97,7 @@ class TaskController {
     next: NextFunction
   ) {
     try {
-      getUserOrError(res.locals);
+      mustReturnUserAndSession(res.locals);
       const isDeleted = await this.service.deleteById(req.params.id);
       if (isDeleted) {
         return res.status(STATUS_CODES.OK).json({
@@ -122,7 +122,7 @@ class TaskController {
     next: NextFunction
   ) {
     try {
-      getUserOrError(res.locals);
+      mustReturnUserAndSession(res.locals);
       const task = await this.service.getTaskById(req.params.id);
       if (!task) {
         return res.status(STATUS_CODES.NOT_FOUND).json({
@@ -148,7 +148,7 @@ class TaskController {
   ) {
     try {
       const tableList = await this.service.getTableList(
-        getUserOrError(res.locals)?.user.id
+        mustReturnUserAndSession(res.locals)?.user.id
       );
       return res.status(STATUS_CODES.OK).json({
         isSuccess: true,

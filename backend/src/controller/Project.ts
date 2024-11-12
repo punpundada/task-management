@@ -2,7 +2,7 @@ import type { NextFunction } from "express";
 import type { Res } from "../types/Res";
 import type { Request, Response } from "express";
 import type { ProjectInsetType, ProjectSelectType } from "../types/projects";
-import { getUserOrError, STATUS_CODES } from "../utils/lib";
+import { mustReturnUserAndSession, STATUS_CODES } from "../utils/lib";
 import ProjectService from "../service/projectService";
 import TasksService from "../service/taskService";
 import type { Option } from "../types/utils";
@@ -13,7 +13,7 @@ export default class ProjectController {
     next: NextFunction
   ) {
     try {
-      req.body.userId = getUserOrError(res.locals).user.id;
+      req.body.userId = mustReturnUserAndSession(res.locals).user.id;
       const savedProject = await ProjectService.saveProject(req.body);
       if (savedProject?.[0]) {
         return res.status(STATUS_CODES.CREATED).json({
@@ -40,7 +40,7 @@ export default class ProjectController {
   ) {
     try {
       const projects = await ProjectService.getProjectByUserId(
-        getUserOrError(res.locals).user.id
+        mustReturnUserAndSession(res.locals).user.id
       );
       return res.status(STATUS_CODES.OK).json({
         isSuccess: true,
@@ -59,7 +59,7 @@ export default class ProjectController {
   ) {
     try {
       const projects = await ProjectService.getProjectByUserId(
-        getUserOrError(res.locals).user.id
+        mustReturnUserAndSession(res.locals).user.id
       );
       return res.status(STATUS_CODES.OK).json({
         isSuccess: true,
@@ -108,7 +108,7 @@ export default class ProjectController {
           message: "Invalid id",
         });
       }
-      req.body.userId = getUserOrError(res.locals).user.id;
+      req.body.userId = mustReturnUserAndSession(res.locals).user.id;
       const updatedProject = await ProjectService.updateProject(req.body);
       if (updatedProject?.[0]) {
         return res.status(STATUS_CODES.OK).json({
@@ -134,7 +134,7 @@ export default class ProjectController {
     try {
       const id = await ProjectService.deleteProjectById(
         req.params.id,
-        getUserOrError(res.locals).user.id
+        mustReturnUserAndSession(res.locals).user.id
       );
       if (id) {
         return res.status(STATUS_CODES.OK).json({

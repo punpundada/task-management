@@ -8,7 +8,7 @@ import {
 import {
   STATUS_CODES,
   createTokenHash,
-  getUserOrError,
+  mustReturnUserAndSession,
   hashParams,
   hashPassword,
   transporter,
@@ -259,9 +259,8 @@ class AuthController {
     res: Response<Res<boolean>>,
     next: NextFunction
   ) {
-    res.locals;
     try {
-      const { session } = getUserOrError(res.locals);
+      const { session } = mustReturnUserAndSession(res.locals);
       await lucia.invalidateSession(session.id);
       res.clearCookie("session");
       return res.status(STATUS_CODES.OK).json({
@@ -280,7 +279,7 @@ class AuthController {
     next: NextFunction
   ) {
     try {
-      const { user } = getUserOrError(res.locals);
+      const { user } = mustReturnUserAndSession(res.locals);
       await lucia.invalidateUserSessions(user.id);
       res.clearCookie("session");
       return res.status(STATUS_CODES.OK).json({

@@ -49,7 +49,7 @@ export class CustomError extends Error{
   }
 }
 
-export const getUserOrError =(locals:{
+export const mustReturnUserAndSession =(locals:{
   user: User | null;
   session: Session | null;
 })=>{
