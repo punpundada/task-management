@@ -1,4 +1,4 @@
-import { and, count, desc, eq, gte, lte, ne, not, sql } from "drizzle-orm";
+import { and, count, desc, eq, gte, lte, sql } from "drizzle-orm";
 import { task } from "../db/schema";
 import {
   taskInsertSchema,
@@ -9,10 +9,16 @@ import {
   type TaskPieChartDataType,
   type TaskSelect,
 } from "../types/task";
-import { undefined, z } from "zod";
+import { z } from "zod";
 import type { db } from "../db";
-import { lastDayOfMonth, startOfMonth, getDate } from "date-fns";
-import { CustomError, STATUS_CODES } from "../utils/lib";
+import {
+  lastDayOfMonth,
+  startOfMonth,
+  getDate,
+  getMonth,
+} from "date-fns";
+
+import { CustomError, MONTHS, STATUS_CODES } from "../utils/lib";
 
 class TasksService {
   db: db;
@@ -76,23 +82,19 @@ class TasksService {
     const validTask = tasksSelectSchema.parse(taskToUpdate);
     switch (validTask.status) {
       case "TODO":
-        if(savedTask.status != 'TODO')
-        validTask.todoDate = new Date();
+        if (savedTask.status != "TODO") validTask.todoDate = new Date();
         break;
       case "BACKLOG":
-        if(savedTask.status != 'BACKLOG')
-        validTask.backlogDate = new Date();
+        if (savedTask.status != "BACKLOG") validTask.backlogDate = new Date();
         break;
       case "CANCLED":
-        if(savedTask.status != 'CANCLED')
-          validTask.cancledDate = new Date();
+        if (savedTask.status != "CANCLED") validTask.cancledDate = new Date();
         break;
       case "DONE":
-        if(savedTask.status != 'DONE')
-          validTask.doneDate = new Date();
+        if (savedTask.status != "DONE") validTask.doneDate = new Date();
         break;
       case "INPROGRESS":
-        if(savedTask.status != 'INPROGRESS')
+        if (savedTask.status != "INPROGRESS")
           validTask.inprogressDate = new Date();
         break;
       default:
@@ -217,6 +219,56 @@ class TasksService {
 
     return res;
   };
+
+  async getBarChartData(half: number, userId: string) {
+
+    const dataList = await this.db
+      .select({ id: task.id, doneDate: task.doneDate })
+      .from(task)
+      .where(
+        and(
+          eq(task.userId, userId),
+          eq(task.status, "DONE"),
+          sql.raw(`
+            done_date is not null
+            `),
+          sql.raw(
+            `CAST(strftime('%m', datetime(${
+              task.doneDate.name
+            },'unixepoch')) AS INTEGER) ${
+              half === 1 ? "BETWEEN 1 AND 6" : "BETWEEN 7 AND 12"
+            }`
+          )
+        )
+      )
+      
+    const taskCountMap = new Map<string, number>();
+
+    dataList.forEach((item) => {
+      if (item.doneDate) {
+        const dateInt = getMonth(new Date(item.doneDate)) as keyof typeof MONTHS;
+        const monthStr = MONTHS[dateInt];
+        if (taskCountMap.has(monthStr)) {
+          taskCountMap.set(monthStr, (taskCountMap.get(monthStr)as number +1) );
+        } else {
+          taskCountMap.set(monthStr, 1);
+        }
+      }
+    });
+
+    return Array.from(taskCountMap.entries()).map(([key,value])=>({month:key,count:value}));
+  }
 }
 
 export default TasksService;
+
+/*
+const chartData = [
+  { month: "January", desktop: 186 },
+  { month: "February", desktop: 305 },
+  { month: "March", desktop: 237 },
+  { month: "April", desktop: 73 },
+  { month: "May", desktop: 209 },
+  { month: "June", desktop: 214 },
+];
+*/

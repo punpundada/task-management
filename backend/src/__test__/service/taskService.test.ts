@@ -1,4 +1,4 @@
-import { expect, test, mock, describe } from "bun:test";
+import { expect, test, mock, describe, beforeEach } from "bun:test";
 import TasksService from "../../service/taskService";
 import type {
   TaskCalanderDataType,
@@ -8,6 +8,7 @@ import type {
 } from "../../types/task";
 import { CustomError, STATUS_CODES } from "../../utils/lib";
 import { ZodError } from "zod";
+import { getUnixTime } from "date-fns";
 
 const mockDb = {
   insert: mock(),
@@ -268,5 +269,65 @@ describe("TaskService/getCalanderData", () => {
     const result = await taskService.getCalanderData(new Date());
 
     expect(result).toEqual(expectedData);
+  });
+});
+
+describe("TaskService/getBarChartData", () => {
+  test("should return valid data", async () => {
+    mockDb.select.mockReturnValueOnce({
+      from: mock().mockReturnValueOnce({
+        where: mock().mockResolvedValueOnce([
+          {
+            id: 39,
+            doneDate: "2024-10-31T06:18:53.000Z",
+          },
+          {
+            id: 25,
+            doneDate: "2024-10-31T06:18:53.000Z",
+          },
+          {
+            id: 25,
+            doneDate: "2024-06-31T06:18:53.000Z",
+          },
+          {
+            id: 14,
+            doneDate: "2024-10-31T06:18:53.000Z",
+          },
+          {
+            id: 11,
+            doneDate: "2024-11-31T06:18:53.000Z",
+          },
+          {
+            id: 11,
+            doneDate: "2024-01-31T06:18:53.000Z",
+          },
+        ]),
+      }),
+    });
+    try {
+      const result = (await taskService.getBarChartData(1, "232"));
+
+      expect(result).toEqual([
+        {
+          month: "OCT",
+          count: 3,
+        },
+        {
+          month: "JUL",
+          count: 1,
+        },
+        {
+          month: "DEC",
+          count: 1,
+        },
+        {
+          month: "JAN",
+          count: 1,
+        },
+      ]);
+      
+    } catch (error) {
+      expect(error).toBeNil();
+    }
   });
 });

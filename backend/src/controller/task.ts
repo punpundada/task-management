@@ -6,7 +6,11 @@ import type {
   TaskSelect,
 } from "../types/task";
 import type { Res } from "../types/Res";
-import { CustomError, STATUS_CODES, mustReturnUserAndSession } from "../utils/lib";
+import {
+  CustomError,
+  STATUS_CODES,
+  mustReturnUserAndSession,
+} from "../utils/lib";
 import { z } from "zod";
 import type TasksService from "../service/taskService";
 import { isValid } from "date-fns";
@@ -198,6 +202,41 @@ class TaskController {
         throw new CustomError("Invalid Date", STATUS_CODES.BAD_REQUEST);
       }
       const data = await this.service.getCalanderData(req.params.date);
+      return res.status(STATUS_CODES.OK).json({
+        isSuccess: true,
+        message: "Request was successful",
+        result: data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  getBarChartData = async (
+    req: Request<{ half: number }, unknown, unknown>,
+    res: Response<
+      Res<
+        {
+          month: string;
+          count: number;
+        }[]
+      >
+    >,
+    next: NextFunction
+  ) => {
+    try {
+      const half = z
+        .number()
+        .int()
+        .positive()
+        .refine((x) => x === 1 || x === 2, {
+          message: "value param must be either 1 or 2",
+        })
+        .parse(+req.params.half);
+
+      const userId = mustReturnUserAndSession(res.locals).user.id;
+      const data = await this.service.getBarChartData(half, userId);
+
       return res.status(STATUS_CODES.OK).json({
         isSuccess: true,
         message: "Request was successful",

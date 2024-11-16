@@ -56,5 +56,10 @@ taskRouter.get(
   mustValidateSession,
   controller.getCalanderData.bind(controller)
 );
+taskRouter.get(
+  "/barchart/:half",
+  mustValidateSession,
+  controller.getBarChartData.bind(controller)
+);
 
 export default taskRouter;
