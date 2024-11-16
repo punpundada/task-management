@@ -20,7 +20,7 @@ const Dashboard = () => {
         </div>
         <div className="w-full h-1/2 grid grid-cols-1 md:grid-cols-[.75fr_.53fr] gap-8">
           <div>
-            priority
+            project progress bar
           </div>
           <div>
             <DoneTasksBarChart />

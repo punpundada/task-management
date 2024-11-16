@@ -94,3 +94,5 @@ export type CalanderDataType = {
   status: StatusType;
   title: string;
 };
+
+export type BarChartType = {month:string,count:number}

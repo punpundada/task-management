@@ -15,24 +15,18 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-
-const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
-];
+import useBarChartData from "@/hooks/dashboard/useBarChartData";
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  count: {
+    label: "Count",
     color: "hsl(var(--chart-4))",
   },
 } satisfies ChartConfig;
 
 const DoneTasksBarChart = () => {
+  const dataList = useBarChartData(2);
+
   return (
     <Card>
       <CardHeader>
@@ -43,7 +37,7 @@ const DoneTasksBarChart = () => {
         <ChartContainer config={chartConfig}>
           <BarChart
             accessibilityLayer
-            data={chartData}
+            data={dataList}
             margin={{
               top: 20,
             }}
@@ -60,7 +54,7 @@ const DoneTasksBarChart = () => {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="desktop" fill="var(--color-desktop)" radius={8}>
+            <Bar dataKey="count" fill="var(--color-count)" radius={8}>
               <LabelList
                 position="top"
                 offset={12}

@@ -1,6 +1,7 @@
 import { axiosInstance } from "@/lib/constants";
 import { errorResponse } from "@/lib/utils";
 import {
+  BarChartType,
   CalanderDataType,
   TaskInsetType,
   TaskPieChartApi,
@@ -101,9 +102,22 @@ export default class TaskService {
   }
   static getCalanderData = async (date: Date) => {
     try {
-      const response = await axiosInstance.get<GenericRes<Record<string, [CalanderDataType]>>>(
-        `/tasks/calander/${date.toISOString()}`
+      const response = await axiosInstance.get<
+        GenericRes<Record<string, [CalanderDataType]>>
+      >(`/tasks/calander/${date.toISOString()}`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      return errorResponse(error);
+    }
+  };
+
+  static getBarChartData = async (half: number) => {
+    try {
+      const response = await axiosInstance.get<GenericRes<BarChartType[]>>(
+        `/tasks/barchart/${half}`
       );
+
       return response.data;
     } catch (error) {
       console.error(error);
